@@ -22,6 +22,10 @@ __pycache__/
 # Git
 *.orig
 
+# Wrangler (Cloudflare)
+.dev.vars
+/.wrangler/
+
 # Large and potentially proprietary data
 /preparation-data/
 /0_ignore/

@@ -27,7 +27,7 @@ class SeaLevelVisualization extends HTMLElement {
   injectSvg() {
     const container = this.shadowRoot.getElementById("slr-svg-container");
 
-    fetch("/public/assets/neustadt-complete-clean.svg")
+    fetch("/assets/neustadt-complete-clean.svg")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load complete SVG");
         return res.text();

@@ -1,9 +1,7 @@
-name = "carbon-calculator"
+name               = "carbon-calculator"
+main               = "functions/_worker.ts"
 compatibility_date = "2025-05-09"
+workers_dev        = true
 
-# Serve static content from `public/`
-[site]
-bucket = "./public"
-
-# Enable function routes (llm, etc.)
-main = "./functions"
+# Statische Dateien liegen in public/
+assets = { directory = "./public" }

@@ -355,7 +355,7 @@ class SeaLevelVisualization extends HTMLElement {
 
     this.shadowRoot.innerHTML = `
       <link rel="stylesheet"
-            href="/public/scrolly/simple-sea-level-visualisation/sea-level-styles.css">
+            href="/scrolly/simple-sea-level-visualisation/sea-level-styles.css">
       <div id="slr-container">
         <div id="slr-svg-container"></div>
 
@@ -373,7 +373,7 @@ class SeaLevelVisualization extends HTMLElement {
   _injectSvg() {
     const container = this.shadowRoot.getElementById('slr-svg-container');
 
-    fetch('/public/assets/neustadt-complete-clean.svg')
+    fetch('/assets/neustadt-complete-clean.svg')
       .then(res => {
         if (!res.ok) throw new Error('Sea-Level SVG konnte nicht geladen werden');
         return res.text();
