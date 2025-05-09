@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+dist/
+build/
+
+# deno
+deno.json
+deno.lock
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# IDEs
+.vscode/
+.idea/
+
+# Git
+*.orig
+
+# Large and potentially proprietary data
+/preparation-data/
+/0_ignore/
+apikey.js

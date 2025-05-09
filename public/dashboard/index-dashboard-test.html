@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Climate Dashboard Test</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Aboreto', serif;
+      background: #f0f0f0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <!-- Dashboard-Komponente -->
+  <climate-dashboard style="max-width: 100vw; max-height: 100vh;"></climate-dashboard>
+
+  <script type="module">
+    import './ClimateDashboard.js';
+    import store from './store.js';
+    import { scenarios } from '../scenario-data/defaultScenarios.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const scenariosById = Object.fromEntries(
+        scenarios.map(s => [s.id, s])
+      );
+
+      store.setState({
+        selectedYear: 2025,
+        selectedScenarioId: 'paris-accord',
+        scenariosById,
+        scenarioEditor: {
+          isOpen: false,
+          targetScenarioId: null,
+          draft: {}
+        },
+        activitiesEditor: {
+          isOpen: false,
+          targetScenarioId: null,
+          targetBehaviorId: null,
+          draft: {}
+        },
+        activityCatalog: [] // Kann später geladen werden
+      });
+    });
+  </script>
+</body>
+</html>

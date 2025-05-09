@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Globe Test</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #111;
+      color: #eee;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    interactive-globe {
+      flex: 1;
+      width: 100%;
+    }
+    #controls {
+      background: #222;
+      padding: 1em;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+      align-items: center;
+    }
+    label {
+      font-size: 0.9em;
+    }
+    input[type="color"], input[type="range"] {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="controls">
+    <label>Ocean Color:
+      <input type="color" id="oceanColor" value="#001122">
+    </label>
+    <label>Selected Country Color:
+      <input type="color" id="selectedColor" value="#00aa00">
+    </label>
+    <label>Default Country Color:
+      <input type="color" id="countryColor" value="#888888">
+    </label>
+    <label>Light Intensity:
+      <input type="range" id="lightIntensity" min="0" max="2" step="0.1" value="1.2">
+    </label>
+    <label>Rotation Speed:
+      <input type="range" id="rotationSpeed" min="0" max="5" step="0.1" value="0.5">
+    </label>
+  </div>
+
+  <interactive-globe style="width: 100%; height: 100%;"></interactive-globe>
+
+  <script type="module">
+    import './interactive-globe.js';
+
+    const globe = document.querySelector('interactive-globe');
+
+    // Set initial selected countries by name or ISO code
+    globe.selectedCountries = ['RUS', 'BRA', 'Nigeria', 'Australia'];
+
+    // React to selection changes
+    globe.addEventListener('selected-countries-changed', e => {
+      console.log('Selected countries:', e.detail);
+    });
+
+    // Hook up UI controls
+    document.getElementById('oceanColor').addEventListener('input', e => {
+      globe.setAttribute('oceancolor', parseInt(e.target.value.replace('#', '0x')));
+    });
+    document.getElementById('selectedColor').addEventListener('input', e => {
+      globe.setAttribute('selectedcolor', parseInt(e.target.value.replace('#', '0x')));
+    });
+    document.getElementById('countryColor').addEventListener('input', e => {
+      globe.setAttribute('countrycolor', parseInt(e.target.value.replace('#', '0x')));
+    });
+    document.getElementById('lightIntensity').addEventListener('input', e => {
+      globe.setAttribute('lightintensity', e.target.value);
+    });
+    document.getElementById('rotationSpeed').addEventListener('input', e => {
+      globe.setAttribute('rotationspeed', e.target.value);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Versinken – Klimasimulator</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/scrollama"></script>
+  <!-- <script defer src="script.js"></script> -->
+  <script type="module">
+    import "./simple-sea-level-visualisation/sea-level-visualization.js"; // Komponente mit DOM
+    import "./simple-sea-level-visualisation/sea-level-animation.js"; // Steuerungslogik
+    import { simulateFutureScenario } from '../scenario-data/simulateFutureScenario.js';
+    import "./script.js";
+
+    const visualization = document.querySelector("sea-level-visualization");
+
+    window.simulateFutureScenario = simulateFutureScenario;
+    const defaultTimeline = simulateFutureScenario({ co2DeltaKg: 0, co2ApplicationTimeframe: 1, tempScenario: 'SSP2_4_5', tcreScenario: 'mid', slrScenario: 'median', co2EffectYearSpread: 7 });
+    ingestSeaLevelTimeline(defaultTimeline);
+
+    // console.log(defaultTimeline);
+  </script>
+  <link rel="icon" href="../assets/puzzle-svgrepo-com.svg" type="image/svg+xml">
+</head>
+<body>
+
+<div class="progress-bar"></div>
+
+<div class="main">
+
+<!-- Header -->
+<header class="header transparent">
+  <div class="header-content">
+    <div class="logo-title">
+      <img src="../assets/puzzle-svgrepo-com.svg" alt="Logo" class="logo">
+      <span class="site-title">Dein Klima-Simulator</span>
+    </div>
+    <nav class="header-nav">
+      <ul class="nav-links">
+        <li><a href="#section-0">Start</a></li>
+        <li><a href="#section-1">Intro</a></li>
+        <li><a href="#section-2">Gefahr!</a></li>
+        <li><a href="#section-3">Wissen</a></li>
+        <li><a href="#section-4">Simulator</a></li>
+        <li><a href="#section-5">Methodik</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+<div class="article">
+
+  <div class="scrolly-background-container">
+    <!-- <div id="bg1" class="scrolly-background" style="background-image: url('../assets/aerial_2.jpg');"></div>
+    <div id="bg2" class="scrolly-background">
+      <video autoplay muted loop>
+        <source src="https://videos.pexels.com/video-files/4916726/4916726-hd_1920_1080_30fps.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div id="bg3" class="scrolly-background" style="background-image: url('https://www.ln-online.de/resizer/v2/BUUIROOGKFDGHPXZLU5MVJFKM4.jpg?auth=2c17087056f7e1279aaa74d94ea9decb459504e4b6d793848d8a739e06d87327&quality=70');"></div> -->
+    <!-- <div id="harbour-ships" class="scrolly-background" style="background-image: url('https://img.oastatic.com/img2/29243197/max/variant.jpg?revbust=7a504ff3');"></div>
+    <div id="bridge" class="scrolly-background" style="background-image: url('https://www.stadt-neustadt.de/media/custom/3563_1494_1_g.JPG?1739883853');"></div>
+    <div id="fish-imbiss" class="scrolly-background" style="background-image: url('https://erlebeschleswigholstein.de/wp-content/uploads/2019/07/Imbiss-Koestlich-7.jpg');"></div>
+    <div id="salt-meadows" class="scrolly-background" style="background-image: url('https://www.bund-sh.de/fileadmin/sh/Graphisches/Bildergalerien/Neustaedter_Binnenwasser/Neustadt---XDSC9996_k-Salzwiese.jpg');"></div>
+    <div id="hansen-house" class="scrolly-background" style="background-image: url('https://lh3.googleusercontent.com/gps-cs-s/AB5caB9JCgu0g2pt1q1pEspxzD8w0bjsr8yzEfbcFsb6K_EQHyfhUDrjJaOhMzd4N7G_pxgnaUMGYk4KtK0ODhIJjeproJUn6nUPIu7VYw9hPzOZwwyRLYbO-DcZENC8JeChNsaW7es=s1360-w1360-h1020');"></div> -->
+    <div id="harbour-ships" class="scrolly-background">
+      <video autoplay muted loop>
+        <source src="../assets/videos_0405/Vestby_PXL_20250430_164406990.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div id="bridge" class="scrolly-background">
+      <video autoplay muted loop>
+        <source src="../assets/videos_0405/Brücke_PXL_20250430_164653042.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div id="fish-imbiss" class="scrolly-background">
+      <video autoplay muted loop>
+        <source src="../assets/videos_0405/Fischbrötchen_PXL_20250430_170108771.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div id="salt-meadows" class="scrolly-background">
+      <video autoplay muted loop>
+        <source src="../assets/videos_0405/Binnenwasser_PXL_20250430_164452090.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div id="hansen-house" class="scrolly-background">
+      <video autoplay muted loop>
+        <source src="../assets/videos_0405/Pagodenspeicher_PXL_20250430_164622433.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+
+
+  <div class="section headline-card-container" id="section-0">
+
+    <!-- Erste große Titelkarte -->
+    <div class="headline-card title">
+      <a class="navigation-marker" id="0"></a>
+      <div class="headline-background">
+        <video autoplay loop muted >
+          <!-- <source src="../assets/2904_nils/MVI_0639.MOV#t=5" type="video/mp4" loop> -->
+          <source src="https://videos.pexels.com/video-files/4916726/4916726-hd_1920_1080_30fps.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="headline-container">
+        <h1 class="headline-title">Hier war einmal Land</h1>
+        <!-- Scroll-Indicator  -->
+        <div id="scroll-indicator" aria-hidden="true">
+          <span class="arrow"></span>
+          <span class="arrow"></span>
+          <span class="arrow"></span>
+          <span class="scroll-label">Scroll</span>
+        </div>
+
+        <!-- Direkt-zum-Simulator-Button -->
+        <button id="to-simulator" class="cta-button" type="button">
+          Direkt&nbsp;zum&nbsp;Simulator
+        </button>
+        <!-- <p class="headline-subtitle"><i>Es beginnt mit ein paar Zentimetern Wasser</i></p> -->
+      </div>
+    </div>
+
+    <!-- Unsichtbarer Scroll-Trigger -->
+    <div class="scroll-trigger" id="trigger-1"></div>
+
+    <!-- Narrative Karte mit Text-Overlay -->
+    <!-- <div class="headline-card narrative">
+      <div class="headline-background" style="background-image: url('../assets/aerial_1.jpg');"></div>
+      <div class="headline-container">
+        <p class="headline-text">
+          Dies ist eine Geschichte vom Klimawandel. Von Schätzen, die im Meer versinken werden. <br> <br> Aber was wir tun oder lassen, verändert die Welt.
+        </p>
+      </div>
+    </div> -->
+
+
+    <!-- Unsichtbarer Scroll-Trigger -->
+    <div class="scroll-trigger" id="trigger-2"></div>
+  </div>
+
+  <!-- <div class="media-trigger align-center" data-target="none">
+    <h2 class="very-bold-intertitle">Das Jahr 2025</h2>
+  </div> -->
+
+  <!-- Einspaltiger Textabschnitt -->
+  <div class="section single-column" id="section-1">
+    <a class="navigation-marker" id="2"></a>
+    <div class="content-container">
+
+      <div class="media-trigger align-right" data-target="none" data-bg-target="harbour-ships">
+        <h2 class="bold-intertitle highlighted-shadow">Aber im April 2025 ist die Zukunft hier noch weit weg.</h2>
+          <h2 class="bold-intertitle highlighted-shadow">Im Hafen schwanken Schiffe auf den Wellen.</h2>
+      </div>
+
+      <div class="media-trigger align-right" data-target="none" data-bg-target="hansen-house">
+        <h2 class="bold-intertitle highlighted-shadow">Der Pagodenspeicher …</h2>
+      </div>
+
+      <div class="media-trigger align-right" data-target="none" data-bg-target="fish-imbiss">
+        <h2 class="bold-intertitle highlighted-shadow">Der Fisch-Imbiss …</h2>
+      </div>
+
+      <div class="media-trigger align-left" data-target="none" data-bg-target="bridge">
+        <h2 class="bold-intertitle highlighted-shadow">Die alte Steinbrücke über die Bucht …</h2>
+      </div>
+
+      <div class="media-trigger align-left" data-target="none" data-bg-target="salt-meadows">
+        <h2 class="bold-intertitle highlighted-shadow">Das Binnenwasser …</h2>
+      </div>
+
+      <div class="media-trigger align-left" data-target="vis1">
+        <h2 class="bold-intertitle">Das ist die kleine Stadt an der Ostsee: Neustadt in Holstein.</h2>
+      </div>
+
+      <!-- Multimedia-Element, das vom ersten Trigger gesteuert wird -->
+      <div id="vis1" class="multimedia-element multimedia-right">
+        <sea-level-visualization></sea-level-visualization>
+      </div>
+
+      <div class="media-trigger align-left first-vis-trigger" data-target="vis1">
+        <h2 class="bold-intertitle">Eines Tages wird die kleine Stadt Vergangenheit sein und vergessen.</h2>
+      </div>
+
+      <div class="media-trigger align-left" data-target="none">
+        <h2 class="bold-intertitle">Verschluckt von Fluten …</h2>
+        <h2 class="bold-intertitle">… die die Menschheit entfesselt hat.</h2>
+
+      </div>
+
+      <div class="media-trigger align-left last-vis-trigger" data-target="vis1">
+        <h2 class="bold-intertitle">Nur die Schiffe werden noch schwimmen.</h2>
+      </div>
+
+      <div class="media-trigger align-left" data-target="none">
+        <h2 class="bold-intertitle">Das zeigen Simulationen.</h2>
+      </div>
+      <div class="media-trigger align-center" data-target="none">
+        <h2 class="bold-intertitle">Schlimmer noch:</h2>
+      </div>
+      <div class="media-trigger align-right" data-target="none">
+        <h2 class="bold-intertitle">Wie Neustadt wird es vielen Orten ergehen.</h2>
+      </div>
+
+      <div class="media-trigger align-left" data-target="venice">
+        <h2 class="bold-intertitle">Venedig, Italien.</h2>
+      </div>
+
+      <div class="media-trigger align-right" data-target="jakarta">
+        <h2 class="bold-intertitle">Jakarta, Indonesien.</h2>
+      </div>
+
+      <div class="media-trigger align-left" data-target="newOrleans">
+        <h2 class="bold-intertitle">New Orleans, USA.</h2>
+      </div>
+
+      <div class="media-trigger align-right" data-target="dhaka">
+        <h2 class="bold-intertitle">Dhaka, Bangladesch.</h2>
+      </div>
+
+      <div id="venice" class="multimedia-element multimedia-right">
+        <img src="../assets/venice.png" alt="Ansicht von Venedig" style="max-width: 100%; max-height: 80vh;">
+      </div>
+
+      <div id="jakarta" class="multimedia-element multimedia-left">
+        <img src="../assets/jakarta1.png" alt="Ansicht von Jakarta" style="max-width: 100%; max-height: 80vh;">
+      </div>
+
+      <div id="newOrleans" class="multimedia-element multimedia-right">
+        <img src="../assets/newOrleans1.jpg" alt="Ansicht von New Orleans" style="max-width: 100%; max-height: 80vh;">
+      </div>
+
+      <div id="dhaka" class="multimedia-element multimedia-left">
+        <img src="../assets/dhaka.png" alt="Ansicht von Dhaka" style="max-width: 100%; max-height: 80vh;">
+      </div>
+
+      <div class="media-trigger align-center" data-target="none">
+        <h2 class="bold-intertitle">Bis 2100 könnte jeder Zehnte unterhalb der Flutpegel leben: eine Milliarde Menschen.</h2>
+      </div>
+
+      <div class="media-trigger align-left" data-target="none">
+        <h2 class="bold-intertitle">Werden die Deiche sie schützen können?</h2>
+      </div>
+
+      <div class="media-trigger align-center" data-target="none">
+        <h2 class="very-bold-intertitle">Zeit für Klartext.</h2>
+      </div>
+    </div>
+  </div>
+
+    <div class="section single-column" id="section-3">
+      <a class="navigation-marker" id="3"></a>
+      <div class="content-container" style="max-width: 600px;">
+
+      <h2 class="regular-headline">Noch für Tausende Jahre wird der Meeresspiegel weiter steigen.</h2>
+      <p class="regular-text kapitale">Aber warum ist das so? Die Grundmechanismen des Klimawandels sind gut erforscht. Gelangen Treibhausgase in die Atmosphäre, erwärmt sich die Oberfläche des Planeten. Würde die Menschheit ab sofort keine Treibhausgase mehr ausstoßen, würde sich innerhalb auch die weitere Erwärmung der Erde schnell deutlich verringern. Der Meeresspiegel aber wird noch lange steigen.
+      </p> <p class="regular-text">Selbst wenn keine weiteren Treibhausgase in die Atmosphäre gelangen. Denn die Gletscher, etwa die Eisschilde Grönlands oder der Antarktis, schmelzen immer weiter.Das IPCC (Intergovernmental Panel on Climate Change) legt seine Prognosen des Meeresspiegels darum auf die kommenden Zehntausend Jahre aus.</p>
+      <h2 class="regular-headline">Und weiter?</h2>
+      <p class="regular-text kapitale">Aber warum ist das so? Die Grundmechanismen des Klimawandels sind gut erforscht. Gelangen Treibhausgase in die Atmosphäre, erwärmt sich die Oberfläche des Planeten. Würde die Menschheit ab sofort keine Treibhausgase mehr ausstoßen, würde sich innerhalb auch die weitere Erwärmung der Erde schnell deutlich verringern. Der Meeresspiegel aber wird noch lange steigen.
+
+    </div>
+<!--
+    <div class="section single-column" id="section-4">
+      <a class="navigation-marker" id="4"></a>
+      <p>
+        Zusätzlicher Absatz für den Abschnitt. Falls nötig, können hier auch Bilder oder andere Medien eingebunden werden.
+      </p>
+    </div>
+    <a class="navigation-marker" id="2"></a>
+    <div class="content-container">
+      <h2 class="headline">Überschrift des Abschnitts</h2>
+      <p>
+        Dies ist ein einspaltiger Textabschnitt mit regulärem Fließtext. Er nimmt die volle Breite des Hauptinhalts ein, 
+        mit entsprechender Einrückung für bessere Lesbarkeit.
+      </p>
+      <p>
+        Zusätzlicher Absatz für den Abschnitt. Falls nötig, können hier auch Bilder oder andere Medien eingebunden werden.
+      </p>
+    </div>
+  </div> -->
+  <div class="section single-column" id="section-3">
+    <h2 class="regular-headline">Dein Klimasimulator</h2>
+  </div>
+  <section id="simulator"></section>
+    <climate-dashboard style="max-width: 100vw; max-height: 100vh;"></climate-dashboard>
+  </section>
+
+  <script type="module">
+    import '../dashboard/ClimateDashboard.js';
+    import store from '../dashboard/store.js';
+    import { scenarios } from '../scenario-data/defaultScenarios.js';
+    document.addEventListener('DOMContentLoaded', () => {
+      const scenariosById = Object.fromEntries(
+        scenarios.map(s => [s.id, s])
+      );
+
+      store.setState({
+        selectedYear: 2025,
+        selectedScenarioId: 'paris-accord',
+        scenariosById,
+        scenarioEditor: {
+          isOpen: false,
+          targetScenarioId: null,
+          draft: {}
+        },
+        activitiesEditor: {
+          isOpen: false,
+          targetScenarioId: null,
+          targetBehaviorId: null,
+          draft: {}
+        },
+        activityCatalog: [] // Kann später geladen werden
+      });
+
+      // Dirty-Check für alle Szenarien
+      for (const scenario of scenarios) {
+        if (!scenario.computed || !scenario.computed.data?.length) {
+          store.markScenarioAsDirty(scenario.id);
+        }
+      }
+    });
+  </script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.kapitale').forEach(p => {
+      const firstChar = p.innerText.charAt(0);
+      const rest = p.innerText.slice(1);
+      p.innerHTML = `<span class="regular-text-initial">${firstChar}</span>${rest}`;
+    });
+  });
+  </script>
+
+<!--
+  <div class="section single-column" id="section-2">
+    <a class="navigation-marker" id="3"></a>
+    <div class="content-container">
+      <h2 class="headline">Überschrift des Abschnitts</h2>
+      <p>
+        Dies ist ein einspaltiger Textabschnitt mit regulärem Fließtext. Er nimmt die volle Breite des Hauptinhalts ein, 
+        mit entsprechender Einrückung für bessere Lesbarkeit.
+      </p>
+      <p>
+        Zusätzlicher Absatz für den Abschnitt. Falls nötig, können hier auch Bilder oder andere Medien eingebunden werden.
+      </p>
+    </div>
+  </div> -->
+
+
+  <!-- <div class="section headline-card-container" id="section-5">
+    <a class="navigation-marker" id="6"></a>
+
+    <div class="headline-card subtitle">
+      <div class="headline-background" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba');"></div>
+      <div class="headline-container">
+        <h2 class="headline-title">Ein Abschnitt mit neuer Perspektive</h2>
+      </div>
+    </div>
+
+    <div class="scroll-trigger" id="trigger-3"></div>
+
+    <div class="headline-card narrative">
+      <div class="headline-background" style="background-image: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0');"></div>
+      <div class="headline-container">
+        <p class="headline-text">
+          „Ein Nebensatz, der den Leser zum Nachdenken bringt. Vielleicht eine kleine Geschichte oder ein Zitat.“
+        </p>
+      </div>
+    </div>
+    <div class="scroll-trigger" id="trigger-4"></div>
+
+  </div> -->
+</div>
+
+<!-- Footer -->
+<!-- <footer class="footer dark">
+  <p>Dein Klimasimulator – 2025</p>
+</footer> -->
+
+</body>
+</html>

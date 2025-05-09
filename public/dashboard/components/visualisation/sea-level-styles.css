@@ -1,0 +1,67 @@
+:host {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Layout-Container */
+#slr-container {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* SVG-Wrapper */
+#slr-svg-container {
+  width: 100%;
+  height: auto;
+}
+
+/* Injected SVG selbst */
+#slr-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Smooth movement for transformed elements */
+#slr-svg #ships,
+#slr-svg #gauge-water-top {
+  transition: transform 1s ease-out;
+}
+
+/* Will only work if browser supports path `d` transitions */
+#slr-svg #gauge-water-base {
+  transition: d 1s ease-out;
+}
+
+/* Optional: gauge visibility fades */
+#slr-svg #gauge,
+#slr-svg #gauge-water-base,
+#slr-svg #gauge-water-top {
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+/* Textbereich */
+#slr-text-wrapper {
+  position: relative;
+  padding: 10px;
+  text-align: center;
+  background-color: var(--color-bg, rgba(255, 255, 255, 0.8));
+  z-index: 10;
+}
+
+#slr-label {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #28b200;
+}
+
+#slr-caption {
+  margin-top: 1.3rem;
+  font-size: 1rem;
+  color: #9b9b9b;
+}
