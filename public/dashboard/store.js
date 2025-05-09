@@ -156,7 +156,7 @@ const store = {
    * Ruft alle registrierten Subscriber mit dem aktuellen State auf.
    */
   notifySubscribers() {
-    console.log('[Store] Notifying', this.subscribers.length, 'subscribers.');
+    // console.log('[Store] Notifying', this.subscribers.length, 'subscribers.');
     for (const fn of this.subscribers) {
       fn(this.state);
     }

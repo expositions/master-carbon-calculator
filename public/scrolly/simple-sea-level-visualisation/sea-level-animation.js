@@ -51,7 +51,7 @@ class SeaLevelAnimator {
       return;
     }
     this.timelineData = timelineObject.data;
-    console.log(`Timeline loaded (${this.timelineData.length} samples).`);
+    // console.log(`Timeline loaded (${this.timelineData.length} samples).`);
   }
 
   /** 2) Main entry – draw chosen year. */

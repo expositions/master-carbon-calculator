@@ -125,8 +125,6 @@ Beachte:
 
     const prompt = PROMPT_TEMPLATE.replace('{{userInput}}', userInput.trim());
 
-    console.log(env.OPENAI_API_KEY);
-
     /** ---- 3. call OpenAI ---------------------------------------------------------- **/
     const openAiRes = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',

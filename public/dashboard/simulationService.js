@@ -15,7 +15,7 @@ import { populations } from '../scenario-data/populations.js';
  * @param {string} scenarioId
  */
 function runScenarioSimulation(scenarioId) {
-  console.log("runScenarioSimulation in simulationService triggered for ID: ", scenarioId);
+  // console.log("runScenarioSimulation in simulationService triggered for ID: ", scenarioId);
 
   const state = store.getState();
   const scenario = state.scenariosById[scenarioId];
@@ -96,7 +96,7 @@ function runScenarioSimulation(scenarioId) {
  * Lauscht auf Änderungen in dirtyScenarioIds und verarbeitet sie.
  */
 export function startSimulationLoop() {
-  console.log("startSimulationLoop triggered");
+  // console.log("startSimulationLoop triggered");
   // Initial-Check: alles markieren, was kein computed hat
   for (const [id, scenario] of Object.entries(store.getState().scenariosById)) {
     if (!scenario?.computed?.data?.length) {
@@ -106,9 +106,9 @@ export function startSimulationLoop() {
 
   setTimeout(() => {
     const dirtyIds = store.getState().dirtyScenarioIds;
-    console.log("Initial delayed dirtyScenarioIds:", dirtyIds);
+    // console.log("Initial delayed dirtyScenarioIds:", dirtyIds);
     for (const id of dirtyIds) {
-      console.log("Running simulation for scenario ID:", id);
+      // console.log("Running simulation for scenario ID:", id);
       runScenarioSimulation(id);
     }
   }, 0);
@@ -118,7 +118,7 @@ export function startSimulationLoop() {
     state => state.dirtyScenarioIds,
     (dirtyList) => {
       for (const id of dirtyList) {
-        console.log("simulationService was notified about dirty scenario, now running on id ", id);
+        // console.log("simulationService was notified about dirty scenario, now running on id ", id);
         runScenarioSimulation(id);
       }
     }

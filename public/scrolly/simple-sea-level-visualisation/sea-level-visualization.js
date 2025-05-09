@@ -45,7 +45,7 @@ class SeaLevelVisualization extends HTMLElement {
         container.innerHTML = ""; // Clean up if necessary
         container.appendChild(svgEl);
 
-        console.log("Complete SVG loaded.");
+        // console.log("Complete SVG loaded.");
 
         if (window.showSeaLevel && typeof window.showSeaLevel === "function") {
           // Optional: fallback check if elements are not yet available

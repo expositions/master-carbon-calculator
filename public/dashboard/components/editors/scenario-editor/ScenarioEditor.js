@@ -284,7 +284,7 @@ class ScenarioEditor extends HTMLElement {
 
 
   _updateScenarioMeta(id) {
-    console.log(`_updateScenarioMeta called at ${new Date().toISOString()} for scenario ID: ${id}`);
+    // console.log(`_updateScenarioMeta called at ${new Date().toISOString()} for scenario ID: ${id}`);
     const name = this.shadowRoot.getElementById('name')?.value;
     const description = this.shadowRoot.getElementById('description')?.value;
 
@@ -304,7 +304,7 @@ class ScenarioEditor extends HTMLElement {
   }
 
   _updateAdvanced(id) {
-    console.log(`_updateAdvanced called at ${new Date().toISOString()} for scenario ID: ${id}`);
+    // console.log(`_updateAdvanced called at ${new Date().toISOString()} for scenario ID: ${id}`);
     const el = this.shadowRoot.getElementById(id);
     const value = el.type === 'number' ? parseFloat(el.value) : el.value;
 

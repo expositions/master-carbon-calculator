@@ -6,7 +6,6 @@
   <title>Versinken – Klimasimulator</title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://unpkg.com/scrollama"></script>
-  <!-- <script defer src="script.js"></script> -->
   <script type="module">
     import "./simple-sea-level-visualisation/sea-level-visualization.js"; // Komponente mit DOM
     import "./simple-sea-level-visualisation/sea-level-animation.js"; // Steuerungslogik
@@ -19,7 +18,6 @@
     const defaultTimeline = simulateFutureScenario({ co2DeltaKg: 0, co2ApplicationTimeframe: 1, tempScenario: 'SSP2_4_5', tcreScenario: 'mid', slrScenario: 'median', co2EffectYearSpread: 7 });
     ingestSeaLevelTimeline(defaultTimeline);
 
-    // console.log(defaultTimeline);
   </script>
   <link rel="icon" href="../assets/puzzle-svgrepo-com.svg" type="image/svg+xml">
 </head>
@@ -53,18 +51,6 @@
 <div class="article">
 
   <div class="scrolly-background-container">
-    <!-- <div id="bg1" class="scrolly-background" style="background-image: url('../assets/aerial_2.jpg');"></div>
-    <div id="bg2" class="scrolly-background">
-      <video autoplay muted loop>
-        <source src="https://videos.pexels.com/video-files/4916726/4916726-hd_1920_1080_30fps.mp4" type="video/mp4">
-      </video>
-    </div>
-    <div id="bg3" class="scrolly-background" style="background-image: url('https://www.ln-online.de/resizer/v2/BUUIROOGKFDGHPXZLU5MVJFKM4.jpg?auth=2c17087056f7e1279aaa74d94ea9decb459504e4b6d793848d8a739e06d87327&quality=70');"></div> -->
-    <!-- <div id="harbour-ships" class="scrolly-background" style="background-image: url('https://img.oastatic.com/img2/29243197/max/variant.jpg?revbust=7a504ff3');"></div>
-    <div id="bridge" class="scrolly-background" style="background-image: url('https://www.stadt-neustadt.de/media/custom/3563_1494_1_g.JPG?1739883853');"></div>
-    <div id="fish-imbiss" class="scrolly-background" style="background-image: url('https://erlebeschleswigholstein.de/wp-content/uploads/2019/07/Imbiss-Koestlich-7.jpg');"></div>
-    <div id="salt-meadows" class="scrolly-background" style="background-image: url('https://www.bund-sh.de/fileadmin/sh/Graphisches/Bildergalerien/Neustaedter_Binnenwasser/Neustadt---XDSC9996_k-Salzwiese.jpg');"></div>
-    <div id="hansen-house" class="scrolly-background" style="background-image: url('https://lh3.googleusercontent.com/gps-cs-s/AB5caB9JCgu0g2pt1q1pEspxzD8w0bjsr8yzEfbcFsb6K_EQHyfhUDrjJaOhMzd4N7G_pxgnaUMGYk4KtK0ODhIJjeproJUn6nUPIu7VYw9hPzOZwwyRLYbO-DcZENC8JeChNsaW7es=s1360-w1360-h1020');"></div> -->
     <div id="harbour-ships" class="scrolly-background">
       <video autoplay muted loop>
         <source src="../assets/videos_0405/Vestby_PXL_20250430_164406990.mp4" type="video/mp4">

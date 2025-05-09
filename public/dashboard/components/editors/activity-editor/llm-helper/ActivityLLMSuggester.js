@@ -198,7 +198,7 @@ export class ActivityLLMSuggester extends HTMLElement {
         const rawResponse = await fetchLLM(userInput.value.trim());
         const fullText = getOutputText(rawResponse);
         const json = extractJSON(fullText);
-        console.log('✅ JSON extrahiert:', json);
+        // console.log('✅ JSON extrahiert:', json);
     
         if (!json) {
           suggestionsEl.innerHTML = '❌ Konnte keine gültige JSON-Antwort extrahieren.';

@@ -632,7 +632,7 @@ export {
  * @returns {Array<string>|null} - List of ISO country codes, or null if not found.
  */
 export function getCountryGroup(groupName) {
-    console.log(`getCountryGroup triggered with groupName: ${groupName}`);
+    // console.log(`getCountryGroup triggered with groupName: ${groupName}`);
     return ALL_AGGREGATES[groupName] || null;
 }
 
@@ -642,9 +642,9 @@ export function getCountryGroup(groupName) {
  * @returns {boolean} - True if the name is an aggregate group name, false otherwise.
  */
 export function isAggregateGroupNameByName(name) {
-    console.log(`isAggregateGroupNameByName triggered with name: ${name}`);
+    // console.log(`isAggregateGroupNameByName triggered with name: ${name}`);
     const result = Object.values(ALL_AGGREGATES_NAMES).some(group => group.includes(name));
-    console.log(`isAggregateGroupNameByName result: ${result}`);
+    // console.log(`isAggregateGroupNameByName result: ${result}`);
     return result;
 }
 
@@ -654,8 +654,8 @@ export function isAggregateGroupNameByName(name) {
  * @returns {boolean} - True if the key is an aggregate group key, false otherwise.
  */
 export function isAggregateGroupNameByKey(key) {
-    console.log(`isAggregateGroupNameByKey triggered with key: ${key}`);
+    // console.log(`isAggregateGroupNameByKey triggered with key: ${key}`);
     const result = Object.keys(ALL_AGGREGATES_NAMES).includes(key);
-    console.log(`isAggregateGroupNameByKey result: ${result}`);
+    // console.log(`isAggregateGroupNameByKey result: ${result}`);
     return result;
 }
