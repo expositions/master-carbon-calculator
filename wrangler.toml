@@ -1,0 +1,9 @@
+name = "carbon-calculator"
+compatibility_date = "2025-05-09"
+
+# Serve static content from `public/`
+[site]
+bucket = "./public"
+
+# Enable function routes (llm, etc.)
+main = "./functions"
