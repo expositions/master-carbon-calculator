@@ -1,0 +1,12 @@
+# Block crawling of API endpoints
+User-agent: *
+Disallow: /
+
+# Allow crawling of the landing page
+Allow: /scrolly/index.html
+
+# Block LLM and other scrapers to avoid traffic
+User-agent: GPTBot
+Disallow: /
+User-agent: CCBot
+Disallow: /
