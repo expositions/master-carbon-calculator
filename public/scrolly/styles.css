@@ -67,7 +67,7 @@ body {
 
 /* Einspaltiger Textabschnitt */
 .section.single-column {
-  max-width: 1200px;
+  /* max-width: 1200px; */
   /* margin: 60px auto; */
   /* padding: 20px; */
   margin: 0; /* Center horizontally */
@@ -474,7 +474,7 @@ body {
 
 .regular-text {
   font-family: Merriweather, Arial, Helvetica, sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   line-height: 2rem;
   font-weight: 300;
   -webkit-hyphens: auto;
@@ -496,7 +496,18 @@ body {
   line-height: 3rem;
   font-weight: 400;
   margin: 0px;
+  margin-top: 2rem;
 }
+
+.regular-teaser {
+  font-family: Merriweather, Arial, Helvetica, sans-serif;
+  font-size: 1.1rem;
+  line-height: 2rem;
+  font-weight: 400;
+  font-style: italic; /* Set text to italic */
+  margin: 0px;
+}
+
 
 
 
@@ -567,3 +578,121 @@ body {
 }
 .cta-button:hover   { background: rgba(0,0,0,.45); transform: translateY(-2px); }
 .cta-button:active  { transform: translateY(0); }
+
+
+
+/* ---------- Autoreninfo ---------- */
+.sub-article-header {
+  width: 550px;
+  display: flex;
+  flex-direction: column;
+  font-family: Merriweather, Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+}
+
+.metadata-author-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+}
+
+.publication-date {
+  color: grey;
+  text-align: right;
+  display: block;
+  font-size: 0.85rem;
+}
+
+.author-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.author-link:hover {
+  opacity: 0.7;
+}
+
+.author-image {
+  border-radius: 50%;
+  height: 5rem;
+  margin-right: 0.5rem;
+}
+
+.author-name a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.author-name a:hover {
+  opacity: 0.5;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+}
+
+.modal p {
+  font-family: 'Merriweather', serif;
+  margin: 0% auto;
+
+}
+
+
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ---------- CTA-Button ---------- */
+.bottom-close-button {
+  margin-top: 3vh;
+  padding: .9em 1.8em;
+  font-family: Aboreto, Arial, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: 2px solid #fff;
+  background: rgba(0,0,0,.25);
+  color: #fff;
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  transition: background .25s, transform .25s;
+}
+.bottom-close-button:hover   { background: rgba(0,0,0,.45); transform: translateY(-2px); }
+.bottom-close-button:active  { transform: translateY(0); }

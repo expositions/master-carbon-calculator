@@ -34,20 +34,15 @@
     </div>
     <nav class="header-nav">
       <ul class="nav-links">
-        <li><a href="#section-0">Start</a></li>
-        <li><a href="#section-1">Intro</a></li>
-        <li><a href="#section-2">Gefahr!</a></li>
-        <li><a href="#section-3">Wissen</a></li>
-        <li><a href="#section-4">Simulator</a></li>
-        <li><a href="#section-5">Methodik</a></li>
+        <li><a href="#section-0">Intro</a></li>
+        <li><a href="#section-1">Simulator</a></li>
+        <li><a href="#section-2">Verstehen</a></li>
       </ul>
     </nav>
   </div>
 </header>
 
-
 <div class="article">
-
   <div class="scrolly-background-container">
     <div id="harbour-ships" class="scrolly-background">
       <video autoplay muted loop>
@@ -75,14 +70,10 @@
       </video>
     </div>
   </div>
-
-
-
   <div class="section headline-card-container" id="section-0">
 
     <!-- Erste große Titelkarte -->
     <div class="headline-card title">
-      <a class="navigation-marker" id="0"></a>
       <div class="headline-background">
         <video autoplay loop muted >
           <!-- <source src="../assets/2904_nils/MVI_0639.MOV#t=5" type="video/mp4" loop> -->
@@ -91,6 +82,10 @@
       </div>
       <div class="headline-container">
         <h1 class="headline-title">Hier war einmal Land</h1>
+        <!-- Direkt-zum-Simulator-Button -->
+        <button id="to-simulator" class="cta-button" type="button">
+          Direkt&nbsp;zum&nbsp;Simulator
+        </button>
         <!-- Scroll-Indicator  -->
         <div id="scroll-indicator" aria-hidden="true">
           <span class="arrow"></span>
@@ -98,11 +93,6 @@
           <span class="arrow"></span>
           <span class="scroll-label">Scroll</span>
         </div>
-
-        <!-- Direkt-zum-Simulator-Button -->
-        <button id="to-simulator" class="cta-button" type="button">
-          Direkt&nbsp;zum&nbsp;Simulator
-        </button>
         <!-- <p class="headline-subtitle"><i>Es beginnt mit ein paar Zentimetern Wasser</i></p> -->
       </div>
     </div>
@@ -120,18 +110,106 @@
       </div>
     </div> -->
 
-
     <!-- Unsichtbarer Scroll-Trigger -->
     <div class="scroll-trigger" id="trigger-2"></div>
   </div>
 
-  <!-- <div class="media-trigger align-center" data-target="none">
-    <h2 class="very-bold-intertitle">Das Jahr 2025</h2>
-  </div> -->
+  <div class="section single-column">
+    <div class="sub-article-header">
+      <div class="author-info">
+        <a href="#author-modal" class="author-link">
+          <img src="../assets/author-nils-erich.jpg" alt="Autorenporträt Nils Erich" class="author-image">
+        </a>
+        <div class="metadata-author-box">
+          <span class="author-name"><a href="#author-modal" class="author-link"> von Nils Erich</a></span>
+          <div class="publication-info">
+            <span class="publication-date">Zuletzt aktualisiert am 11. Mai 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="author-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Über den Autor</h2>
 
-  <!-- Einspaltiger Textabschnitt -->
-  <div class="section single-column" id="section-1">
-    <a class="navigation-marker" id="2"></a>
+        <div style="display: flex; align-items: stretch;">
+          <img src="../assets/author-nils-erich.jpg" alt="Autorenporträt Nils Erich" style="height: 100%; width: 100%; margin-right: 20px;">
+          <div>
+            <p>Ich bin Nils Erich. Als Software-Entwickler, Prompt Engineer und freiberuflicher Journalist arbeite ich an innovativen Wegen, digital zu erzählen. Journalistisch wurde ich ausgebildet beim GEO-Magazin als Volontär, bei Zeit Online Kultur als Jungredakteur sowie der Universität der Künste im Masterstudiengang Kulturjournalismus.<br> <br>
+              Diese Website ist mein Werkstück für das besagte Studium Kulturjournalismus.
+            </p>
+          </div>
+        </div>
+
+        <h2>Warum genau dieses Thema?</h2>
+        <p>Ich versuche selbst, klimabewusst zu leben. Immer wieder recherchiere ich dieselben Infos und rechne herum: Wie viel Unterschied macht es für das Klima, ob ich nun mit Bus und Zug nach Georgien fahre oder doch einmal fliege? Wie schlimm sind Avocados? Aber die Zahlen entfliehen meinem Gedächtnis.<br> <br>
+          Und selbst wenn ich die Zahlen habe: Wie soll ich sie dann einordnen? Was bedeuten 400 Kilo CO₂ für das Klima? <br> <br>
+          Mit der Zeit wurde mir klar: Für mich ist es intuitiv, mir die Folgen davon vorzustellen, wenn andere dieselben Entscheidungen träfen wie ich. Denn natürlich ist mein einer eigener Flugplatz nach Georgien nur ein kleiner Beitrag zum Klimawandel. Aber wenn alle Reisenden das ähnlich täten – dann wächst der Beitrag ja schon massiv. <br> <br>
+          Mehr noch: Bei bekannten Klimarechnern geht es immer um den individuellen Fußabdruck. Dabei sind unsere Handlungen doch immer schon kollektive Praxen, sagt mir zumindest im Geist mein kritischer erster Philosophieprofessor. Wir müssen unsere Handlungen als gemeinsame Praxis denken. Und eine gemeinsame Praxis, die zu derartigen Ungerechtigkeiten führt wie der Klimawandel, kann aus meiner Sicht nicht die richtige Praxis sein. <br> <br>
+          Diese Website ist ein Versuch, diese Gedanken systematisch zu fassen, sie datenjournalistisch und interaktiv aufzubereiten. Für mich selbst, aber vor allem für alle Menschen, die sich unsicher fühlen, wie sie sich konkret zum Klimawandel verhalten sollen. Die gerne Dinge richtig machen würden, aber nicht genau wissen, wie. <br> <br>
+          Ich hoffe, dass dieses Ziel zumindest ein wenig gelungen ist. In den nächsten Monaten, vielleicht Jahren, werde ich weiter an dieser Website schrauben, um sie zu einem guten Werkzeug zu machen, um die Folgen unserer Lebensweisen besser zu durchblicken.
+        </p>
+        <button id="bottom-close-button" class="bottom-close-button">Zurück zur Website</span>
+      </div>
+      <script> // Modal logic
+        document.addEventListener('DOMContentLoaded', () => {
+          const modal = document.getElementById('author-modal');
+          const authorLinks = document.querySelectorAll('.author-link');
+          const closeButton = document.querySelector('.close-button');
+          const bottomCloseButton = document.getElementById('bottom-close-button');
+  
+          authorLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+              event.preventDefault();
+              modal.style.display = 'block';
+            });
+          });
+  
+          closeButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+          });
+  
+          bottomCloseButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+          });
+  
+          globalThis.addEventListener('click', (event) => {
+            if (event.target === modal) {
+              modal.style.display = 'none';
+            }
+          });
+        });
+      </script>
+    </div>
+
+    <div class="content-container" style="max-width: 550px;">
+
+    <h2 class="regular-teaser">Das Klima hat sich schon immer verändert. Hitze, Kälte und das wogende Meer haben die Geschicke der Menschheit geleitet. Doch die Erderwärmung im 21. Jahrhundert ist menschengemacht; immer stärker werden die Wetterkapriolen, die Unwetter, Hitzewellen und Sturmfluten. Kann der Mensch den Klimawandel wieder stoppen? <br> Antworten gibt dieses Dossier.
+    </h2>
+<!-- Alternativen:
+    Nicht nur das Wetter, sondern auch das Klima bestimmt unser Leben. 
+
+    Der Klimawandel wirkt überall, schon heute schluckt er Küsten und Kulturen. Wie wichtig ist 
+    Ein Dossier
+    Wie das Meer Küsten und Kulturen schluckt
+    Wie du klimafreundlicher lebst
+    Zukunft ist wichtig
+    Und aus der möglichen Zukunft schlüsse zu ziehen -->
+
+    <!--       seitdem Forschende die Wetterdaten systematisch aufzeichnen, war es auf unserem Planeten noch nie so heiß wie im Jahr 2024. Und ob 2025, 2026 oder 2046: Die Chancen stehe gut, dass dieser Satz immer wieder auf's Neue wahr sein wird. Denn die Erde heizt sich weiter auf.
+ -->
+
+<!-- Intention des Editorials: Vorbereiten. Die Bühne setzen. Leuten ein Gefühl geben und sagen, worum es gehen wird. Worum wird es gehen? Die wichtigsten Fragen, die sich ergeben, wenn man sich fragt, welchen Einfluss man auf das Klima haben kann.  -->
+    <!-- <p class="regular-text"> <strong>Liebe Lesende, </strong><br>würden sie einen Kredit aufnehmen, wenn erst ihre Enkelkinder den Kredit zurückzahlen müssten – dafür aber mit deftigen Zinsen? Fragen wie diese stelle ich mir manchmal, wenn ich über den Klimawandel nachdenke.
+    </p>-->  
+    
+    <p class="regular-text kapitale">Der Klimawandel ist nur schwer zur erfassen. Was ist das überhaupt, Klimawandel?</p>
+
+    <h2 class="regular-headline">Und weiter?</h2>
+  </div>
+
+  <div class="section single-column" id="section-2">
     <div class="content-container">
 
       <div class="media-trigger align-right" data-target="none" data-bg-target="harbour-ships">
@@ -235,7 +313,6 @@
   </div>
 
     <div class="section single-column" id="section-3">
-      <a class="navigation-marker" id="3"></a>
       <div class="content-container" style="max-width: 600px;">
 
       <h2 class="regular-headline">Noch für Tausende Jahre wird der Meeresspiegel weiter steigen.</h2>
@@ -243,16 +320,15 @@
       </p> <p class="regular-text">Selbst wenn keine weiteren Treibhausgase in die Atmosphäre gelangen. Denn die Gletscher, etwa die Eisschilde Grönlands oder der Antarktis, schmelzen immer weiter.Das IPCC (Intergovernmental Panel on Climate Change) legt seine Prognosen des Meeresspiegels darum auf die kommenden Zehntausend Jahre aus.</p>
       <h2 class="regular-headline">Und weiter?</h2>
       <p class="regular-text kapitale">Aber warum ist das so? Die Grundmechanismen des Klimawandels sind gut erforscht. Gelangen Treibhausgase in die Atmosphäre, erwärmt sich die Oberfläche des Planeten. Würde die Menschheit ab sofort keine Treibhausgase mehr ausstoßen, würde sich innerhalb auch die weitere Erwärmung der Erde schnell deutlich verringern. Der Meeresspiegel aber wird noch lange steigen.
-
     </div>
+
+
 <!--
     <div class="section single-column" id="section-4">
-      <a class="navigation-marker" id="4"></a>
       <p>
         Zusätzlicher Absatz für den Abschnitt. Falls nötig, können hier auch Bilder oder andere Medien eingebunden werden.
       </p>
     </div>
-    <a class="navigation-marker" id="2"></a>
     <div class="content-container">
       <h2 class="headline">Überschrift des Abschnitts</h2>
       <p>
@@ -319,7 +395,6 @@
 
 <!--
   <div class="section single-column" id="section-2">
-    <a class="navigation-marker" id="3"></a>
     <div class="content-container">
       <h2 class="headline">Überschrift des Abschnitts</h2>
       <p>
@@ -334,7 +409,6 @@
 
 
   <!-- <div class="section headline-card-container" id="section-5">
-    <a class="navigation-marker" id="6"></a>
 
     <div class="headline-card subtitle">
       <div class="headline-background" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba');"></div>
