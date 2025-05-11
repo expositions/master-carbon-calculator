@@ -11,6 +11,7 @@
     import "./simple-sea-level-visualisation/sea-level-animation.js"; // Steuerungslogik
     import { simulateFutureScenario } from '../scenario-data/simulateFutureScenario.js';
     import "./script.js";
+    import "./expandable-infobox.js";
 
     const visualization = document.querySelector("sea-level-visualization");
 
@@ -203,10 +204,17 @@
 <!-- Intention des Editorials: Vorbereiten. Die Bühne setzen. Leuten ein Gefühl geben und sagen, worum es gehen wird. Worum wird es gehen? Die wichtigsten Fragen, die sich ergeben, wenn man sich fragt, welchen Einfluss man auf das Klima haben kann.  -->
     <!-- <p class="regular-text"> <strong>Liebe Lesende, </strong><br>würden sie einen Kredit aufnehmen, wenn erst ihre Enkelkinder den Kredit zurückzahlen müssten – dafür aber mit deftigen Zinsen? Fragen wie diese stelle ich mir manchmal, wenn ich über den Klimawandel nachdenke.
     </p>-->  
-    
-    <p class="regular-text kapitale">Der Klimawandel ist nur schwer zur erfassen. Was ist das überhaupt, Klimawandel?</p>
 
-    <h2 class="regular-headline">Und weiter?</h2>
+    <expandable-infobox>
+      <span slot="headline">Mehr über dieses Dossier</span>
+      <p>In diesem Dossier finden Sie einen Klimasimulator, wie es ihn bisher nicht gab. In Klima-Fußabdruck-Simulatoren konnten Sie sich auch schon jetzt ihren persönlichen Treibhausgas-Abdruck berechnen lassen. Vielleicht auch Tipps bekommen, wo Sie Treibhausgase einsparen können. </p>
+      <p>Aber anschaulich sind diese Simulatoren nicht. Sie vermitteln auch kein tieferes Wissen über den Klimawandel und unsere Handlungsoptionen. Der Mensch schrumpft in diesen Simulatoren zusammen auf den Homo Consumens, den konsumierenden Menschen.</p>
+      <p>Der Simulator in diesem Dossier hingegen versucht, Übersicht zu schaffen. Wie viel bringt es, global gesehen, wirklich, sein Konsumverhalten zu ändern? Was bringen größere Umstellungen im Wirtschafts- und Energiesystem im Vergleich? Mit dem Klimasimulator erhalten Sie ein mächtiges Werkzeug, um ganz konkret abzuschätzen, ob es sich lohnt, ihren Konsum und ihr Verhalten anzupassen. Nach dem Simulator finden Sie Erklärungen zur Methodik und auch einen kleinen Essay darüber, was der Klimawandel für die menschliche Gesellschaft bedeutet.</p>
+      <p>Viel Vergnügen und Neugier beim Erkunden dieses Dossiers.</p>
+    </expandable-infobox>
+
+
+
   </div>
 
   <div class="section single-column" id="section-2">
