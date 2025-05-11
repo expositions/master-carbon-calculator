@@ -141,7 +141,7 @@ export class InteractiveGlobe extends HTMLElement {
     }
     // Event-Listener entfernen
     if (this._onResize) {
-      window.removeEventListener('resize', this._onResize);
+      globalThis.removeEventListener('resize', this._onResize);
       this._onResize = null;
     }
     if (this._onMouseDown) {
@@ -266,7 +266,7 @@ export class InteractiveGlobe extends HTMLElement {
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(this.offsetWidth, this.offsetHeight);
     };
-    window.addEventListener('resize', this._onResize);
+    globalThis.addEventListener('resize', this._onResize);
   }
 
   loadGeoJSON() {

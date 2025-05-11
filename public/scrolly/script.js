@@ -5,14 +5,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const progressBar = document.querySelector(".progress-bar");
 
   function updateProgress() {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollTop = globalThis.scrollY;
+    const docHeight = document.documentElement.scrollHeight - globalThis.innerHeight;
     const scrollPercent = (scrollTop / docHeight) * 100;
 
     progressBar.style.height = scrollPercent + "vh"; // Setzt Höhe in % des Viewports
   }
 
-  window.addEventListener("scroll", updateProgress);
+  globalThis.addEventListener("scroll", updateProgress);
 });
 
 
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
 const vis1 = document.getElementById('vis1');
 const firstTrigger = document.querySelectorAll('.media-trigger[data-target="vis1"]')[1];
 const thirdTrigger = document.querySelectorAll('.media-trigger[data-target="vis1"]')[2];
-window.addEventListener('scroll', function() {
+globalThis.addEventListener('scroll', function() {
   const firstTriggerTop = firstTrigger.getBoundingClientRect().top;
   const thirdTriggerTop = thirdTrigger.getBoundingClientRect().top;
 
@@ -135,7 +135,7 @@ window.addEventListener('scroll', function() {
   }
 
   // Measure percentage advancement in scrolling
-  const scrollTop = window.scrollY;
+  const scrollTop = globalThis.scrollY;
   const firstTriggerOffset = firstTrigger.offsetTop;
   const thirdTriggerOffset = thirdTrigger.offsetTop;
   const totalScrollDistance = thirdTriggerOffset - firstTriggerOffset;
@@ -158,11 +158,8 @@ window.addEventListener('scroll', function() {
 });
 
 
-// This code sets up an event listener for the 'scroll' event on the window object.
-// It calculates the position of the first and third media triggers that target the 'vis1' element.
-// If the user has scrolled past the first trigger but not yet reached the third trigger, it adds a 'sticky' class to the 'vis1' element to keep it fixed on the screen.
-// It also calculates the scroll percentage between the first and third triggers to dynamically update the sea level visualization based on the year.
-// The year is determined by the scroll percentage and is used to call the 'showSeaLevel' function, which updates the visualization.
+// This code sets up Scrollama to trigger background changes when entering or exiting steps.
+// It listens for step enter and exit events and updates the background accordingly.
 document.addEventListener("DOMContentLoaded", function () {
   const scrollyBgScroller = scrollama();
 
@@ -204,8 +201,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const fadeAfter = 120; // px: ab hier wird Pfeil ausgeblendet
 
   // Pfeil ein- / ausblenden
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > fadeAfter) {
+  globalThis.addEventListener("scroll", () => {
+    if (globalThis.scrollY > fadeAfter) {
       indicator.classList.add("hide");
     } else {
       indicator.classList.remove("hide");

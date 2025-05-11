@@ -175,5 +175,5 @@ class SeaLevelAnimator {
 /* --------------------------------------------------------------------- */
 /*  Convenience globals so the HTML can simply call these                */
 const seaLevelAnimator = new SeaLevelAnimator();
-window.ingestSeaLevelTimeline = data => seaLevelAnimator.ingestSeaLevelTimeline(data);
-window.showSeaLevel          = year => seaLevelAnimator.showSeaLevel(year);
+globalThis.ingestSeaLevelTimeline = data => seaLevelAnimator.ingestSeaLevelTimeline(data);
+globalThis.showSeaLevel          = year => seaLevelAnimator.showSeaLevel(year);

@@ -14,7 +14,7 @@
 
     const visualization = document.querySelector("sea-level-visualization");
 
-    window.simulateFutureScenario = simulateFutureScenario;
+    globalThis.simulateFutureScenario = simulateFutureScenario;
     const defaultTimeline = simulateFutureScenario({ co2DeltaKg: 0, co2ApplicationTimeframe: 1, tempScenario: 'SSP2_4_5', tcreScenario: 'mid', slrScenario: 'median', co2EffectYearSpread: 7 });
     ingestSeaLevelTimeline(defaultTimeline);
 

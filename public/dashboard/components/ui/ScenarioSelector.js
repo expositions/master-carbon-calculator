@@ -1,6 +1,6 @@
 import store from '../../store.js';
 
-window.store = store;
+globalThis.store = store;
 
 const template = document.createElement('template');
 template.innerHTML = `

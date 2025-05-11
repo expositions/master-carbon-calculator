@@ -47,9 +47,9 @@ class SeaLevelVisualization extends HTMLElement {
 
         // console.log("Complete SVG loaded.");
 
-        if (window.showSeaLevel && typeof window.showSeaLevel === "function") {
+        if (globalThis.showSeaLevel && typeof globalThis.showSeaLevel === "function") {
           // Optional: fallback check if elements are not yet available
-          setTimeout(() => window.showSeaLevel(1900), 50);
+          setTimeout(() => globalThis.showSeaLevel(1900), 50);
         }
       })
       .catch((err) => console.error("SVG injection error:", err));

@@ -167,7 +167,7 @@ template.innerHTML = `
         document.body.style.userSelect = 'none';
       });
 
-      window.addEventListener('mousemove', (e) => {
+      globalThis.addEventListener('mousemove', (e) => {
         if (!isResizing) return;
 
         const offsetLeft = e.clientX;
@@ -177,7 +177,7 @@ template.innerHTML = `
         selector.style.flex = `0 0 ${newWidth}px`;
       });
 
-      window.addEventListener('mouseup', () => {
+      globalThis.addEventListener('mouseup', () => {
         if (isResizing) {
           isResizing = false;
           document.body.style.cursor = '';
