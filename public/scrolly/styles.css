@@ -704,23 +704,14 @@ body {
 
 
 /* Style for visited links */
-.header-nav a:visited,
-.footer a:visited,
-.site-title a:visited,
-.author-name a:visited,
 .article a:visited,
-.article a,
-.author-link a:visited {
+.article a {
   color: #266592ff; /* Use the same green color used in other occasions */
   opacity: 0.9; /* Slightly reduced opacity for visited state */
   text-decoration: none; /* Ensures no underlines or different styles */
 }
 
-.header-nav a:visited:hover,
-.footer a:visited:hover,
-.site-title a:visited:hover,
-.author-name a:visited:hover,
 .article a:visited,
-.author-link a:visited:hover {
+.article a {
   opacity: 0.7; /* Keeps the hover effect consistent for visited links */
 }
