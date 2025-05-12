@@ -97,25 +97,9 @@
         <!-- <p class="headline-subtitle"><i>Es beginnt mit ein paar Zentimetern Wasser</i></p> -->
       </div>
     </div>
-
-    <!-- Unsichtbarer Scroll-Trigger -->
-    <div class="scroll-trigger" id="trigger-1"></div>
-
-    <!-- Narrative Karte mit Text-Overlay -->
-    <!-- <div class="headline-card narrative">
-      <div class="headline-background" style="background-image: url('../assets/aerial_1.jpg');"></div>
-      <div class="headline-container">
-        <p class="headline-text">
-          Dies ist eine Geschichte vom Klimawandel. Von Schätzen, die im Meer versinken werden. <br> <br> Aber was wir tun oder lassen, verändert die Welt.
-        </p>
-      </div>
-    </div> -->
-
-    <!-- Unsichtbarer Scroll-Trigger -->
-    <div class="scroll-trigger" id="trigger-2"></div>
   </div>
 
-  <div class="section single-column">
+  <div class="section single-column"> <!-- content-header -->
     <div class="sub-article-header">
       <div class="author-info">
         <a href="#author-modal" class="author-link">
@@ -159,22 +143,22 @@
           const authorLinks = document.querySelectorAll('.author-link');
           const closeButton = document.querySelector('.close-button');
           const bottomCloseButton = document.getElementById('bottom-close-button');
-  
+
           authorLinks.forEach(link => {
             link.addEventListener('click', (event) => {
               event.preventDefault();
               modal.style.display = 'block';
             });
           });
-  
+
           closeButton.addEventListener('click', () => {
             modal.style.display = 'none';
           });
-  
+
           bottomCloseButton.addEventListener('click', () => {
             modal.style.display = 'none';
           });
-  
+
           globalThis.addEventListener('click', (event) => {
             if (event.target === modal) {
               modal.style.display = 'none';
@@ -183,41 +167,25 @@
         });
       </script>
     </div>
-
+<!-- Editorial Teil A: Einleitung -->
     <div class="content-container" style="max-width: 550px;">
-
-    <h2 class="regular-teaser">Das Klima hat sich schon immer verändert. Hitze, Kälte und das wogende Meer haben die Geschicke der Menschheit geleitet. Doch die Erderwärmung im 21. Jahrhundert ist menschengemacht; immer stärker werden die Wetterkapriolen, die Unwetter, Hitzewellen und Sturmfluten. <br> Was macht der Klimawandel mit uns Menschen, unserer Gesellschaft, unserer Kultur? Vor welche Herausforderungen stellt er uns? Und: Wie kann der Mensch den Klimawandel wieder stoppen?  <br> Antworten gibt dieses Dossier.
-    </h2>
-<!-- Alternativen:
-    Nicht nur das Wetter, sondern auch das Klima bestimmt unser Leben. 
-
-    Der Klimawandel wirkt überall, schon heute schluckt er Küsten und Kulturen. Wie wichtig ist 
-    Ein Dossier
-    Wie das Meer Küsten und Kulturen schluckt
-    Wie du klimafreundlicher lebst
-    Zukunft ist wichtig
-    Und aus der möglichen Zukunft schlüsse zu ziehen -->
-
-    <!--       seitdem Forschende die Wetterdaten systematisch aufzeichnen, war es auf unserem Planeten noch nie so heiß wie im Jahr 2024. Und ob 2025, 2026 oder 2046: Die Chancen stehe gut, dass dieser Satz immer wieder auf's Neue wahr sein wird. Denn die Erde heizt sich weiter auf.
- -->
-
-<!-- Intention des Editorials: Vorbereiten. Die Bühne setzen. Leuten ein Gefühl geben und sagen, worum es gehen wird. Worum wird es gehen? Die wichtigsten Fragen, die sich ergeben, wenn man sich fragt, welchen Einfluss man auf das Klima haben kann.  -->
-    <!-- <p class="regular-text"> <strong>Liebe Lesende, </strong><br>würden sie einen Kredit aufnehmen, wenn erst ihre Enkelkinder den Kredit zurückzahlen müssten – dafür aber mit deftigen Zinsen? Fragen wie diese stelle ich mir manchmal, wenn ich über den Klimawandel nachdenke.
-    </p>-->  
-    <!--  EVENTUELL SONST BUNKA STATTDESSEN? -->
-    <p class="regular-text kapitale">Blicken Sie manchmal auch einfach auf das Meer hinaus, auf die Wellen, lassen sich einlullen von dem unregelmäßigen Rhythmus der Wogen? Beobachten Sie ihre schäumend weißen Kronen, die auftauchen und gleich wieder vergehen, das funkelnde Glitzern des Wassers? Oder standen Sie schon mal bei Sturmflut am Deich, spritzte ihnen die Gischt ins Gesicht, sahen sie, wie der Wind das Meer gen Land peitschte? Das Meer: so unfassbar friedlich im einen Moment – und im nächsten so unfassbar gewaltig.</p>
-    <p class="regular-text">Alles ist im Fluss, heißt es. Außer das Meer, sollte man ergänzen. Aber verändern tut sich auch das Meer: Stetig lässt der Klimawandel die Flutpegel steigen. Und je weiter das Meer steigt, desto mehr Land schluckt es. Noch führen Menschen ihr ganzes Leben auf diesem Land, ob sie Kartoffeln anbauen oder im Hafencafé Karten spielen: Das steht mit dem Klimawandel auf dem Spiel. Landstriche und mit ihnen ganze Lebensweisen.</p>
-    <p class="regular-text">Was also bedeutet der Klimawandel für Sie und mich, für die Menschheit? Und was können Sie und ich tun, damit vielleicht nicht die Küsten der Welt unweigerlich im Meer versinken und mit ihnen die all die Orte, die für so viele Menschen Heimat, Geborgenheit, ja, ein Leben bedeuten?</p>
-    <expandable-infobox>
-      <span slot="headline">Mehr über dieses Dossier</span>
-      <p>In diesem Dossier finden Sie einen neuartigen Klimasimulator. In Klima-Fußabdruck-Simulatoren konnten Sie sich auch schon jetzt ihren persönlichen Treibhausgas-Abdruck berechnen lassen. Vielleicht auch Tipps bekommen, wo Sie Treibhausgase einsparen können. </p>
-      <p>Aber anschaulich sind diese Simulatoren nicht. Sie vermitteln auch kein tieferes Wissen über den Klimawandel und unsere Handlungsoptionen. Der Mensch schrumpft in diesen Simulatoren zusammen auf den Homo Consumens, den konsumierenden Menschen.</p>
-      <p>Der Simulator in diesem Dossier hingegen versucht, Übersicht zu schaffen. Wie viel bringt es, global gesehen, wirklich, sein Konsumverhalten zu ändern? Was bringen größere Umstellungen im Wirtschafts- und Energiesystem im Vergleich? Mit dem Klimasimulator erhalten Sie ein mächtiges Werkzeug, um ganz konkret abzuschätzen, ob es sich lohnt, ihren Konsum und ihr Verhalten anzupassen. Nach dem Simulator finden Sie Erklärungen zur Methodik und auch einen kleinen Essay darüber, was der Klimawandel für die menschliche Gesellschaft bedeutet.</p>
-    </expandable-infobox>
-    <p class="regular-text">Dies ist ein Ort zum Erkunden und Experimentieren. Erschaffen Sie alternative Zukünfte. Spielen Sie ein wenig: Das Thema ist ja schließlich ernst genug. Ahoi!</p>
+      <h2 class="regular-teaser">Das Klima hat sich schon immer verändert. Hitze, Kälte und das wogende Meer haben die Geschicke der Menschheit geleitet. Doch die Erderwärmung im 21. Jahrhundert ist menschengemacht; immer stärker werden die Wetterkapriolen, die Unwetter, Hitzewellen und Sturmfluten. <br> Was macht der Klimawandel mit uns Menschen, unserer Gesellschaft, unserer Kultur? Vor welche Herausforderungen stellt er uns? Und: Wie kann der Mensch den Klimawandel wieder stoppen?  <br> Antworten gibt dieses Dossier.
+      </h2>
+      <p class="regular-text kapitale">Blicken Sie manchmal auch einfach auf das Meer hinaus, auf die Wellen, lassen sich einlullen von dem unregelmäßigen Rhythmus der Wogen? Beobachten Sie ihre schäumend weißen Kronen, die auftauchen und gleich wieder vergehen, das funkelnde Glitzern des Wassers? Oder standen Sie schon mal bei Sturmflut am Deich, spritzte ihnen die Gischt ins Gesicht, sahen sie, wie der Wind das Meer gen Land peitschte? Das Meer: so unfassbar friedlich im einen Moment – und im nächsten so unfassbar gewaltig.</p>
+      <p class="regular-text">Alles ist im Fluss, heißt es. Außer das Meer, sollte man ergänzen. Aber verändern tut sich auch das Meer: Stetig lässt der Klimawandel die Flutpegel steigen. Und je weiter das Meer steigt, desto mehr Land schluckt es. Noch führen Menschen ihr ganzes Leben auf diesem Land, ob sie Kartoffeln anbauen oder im Hafencafé Karten spielen: Das steht mit dem Klimawandel auf dem Spiel. Landstriche und mit ihnen ganze Lebensweisen.</p>
+      <p class="regular-text">Was also bedeutet der Klimawandel für Sie und mich, für die Menschheit? Und was können Sie und ich tun, damit vielleicht nicht die Küsten der Welt unweigerlich im Meer versinken und mit ihnen die all die Orte, die für so viele Menschen Heimat, Geborgenheit, ja, ein Leben bedeuten?</p>
+      <expandable-infobox>
+        <span slot="headline">Mehr über dieses Dossier</span>
+        <p>In diesem Dossier finden Sie einen neuartigen Klimasimulator. In Klima-Fußabdruck-Simulatoren konnten Sie sich auch schon jetzt ihren persönlichen Treibhausgas-Abdruck berechnen lassen. Vielleicht auch Tipps bekommen, wo Sie Treibhausgase einsparen können. </p>
+        <p>Aber anschaulich sind diese Simulatoren nicht. Sie vermitteln auch kein tieferes Wissen über den Klimawandel und unsere Handlungsoptionen. Der Mensch schrumpft in diesen Simulatoren zusammen auf den Homo Consumens, den konsumierenden Menschen.</p>
+        <p>Der Simulator in diesem Dossier hingegen versucht, Übersicht zu schaffen. Wie viel bringt es, global gesehen, wirklich, sein Konsumverhalten zu ändern? Was bringen größere Umstellungen im Wirtschafts- und Energiesystem im Vergleich? Mit dem Klimasimulator erhalten Sie ein mächtiges Werkzeug, um ganz konkret abzuschätzen, ob es sich lohnt, ihren Konsum und ihr Verhalten anzupassen. Nach dem Simulator finden Sie Erklärungen zur Methodik und auch einen kleinen Essay darüber, was der Klimawandel für die menschliche Gesellschaft bedeutet.</p>
+      </expandable-infobox expanded-height="100vh">
+      <p class="regular-text">Dies ist ein Ort zum Erkunden und Experimentieren. Erschaffen Sie alternative Zukünfte. Spielen Sie ein wenig: Das Thema ist ja schließlich ernst genug. Ahoi!</p>
+    </div>
   </div>
 
-  <div class="section single-column" id="section-2">
+<!-- Editorial Teil B: Scrollytelling -->
+  <div class="section single-column" id="">
     <div class="content-container">
       <div class="media-trigger align-right" data-target="neustadt-map">
         <h2 class="bold-intertitle">April 2025, Neustadt in Holstein.</h2>
@@ -338,7 +306,13 @@
     </div>
   </div>
 
-  <div class="section single-column" id="section-3">
+
+<!-- Beginn Teil 2: Simulator (mit Texten)-->
+  <div class="section single-column" id="section-1">
+    <div class="content-container" style="max-width: 550px;">
+      <h2 class="regular-headline">Was hilft wirklich?</h2>
+      <p class="regular-text kapitale">Über Lösungen für den Klimawandel wird schon lange gesprochen. Aber wie viel ist dabei </p>
+    </div>
     <h2 class="regular-headline">Dein Klimasimulator</h2>
   </div>
   <section id="simulator"></section>
@@ -399,7 +373,34 @@
 </body>
 </html>
 
+    <!-- Narrative Karte mit Text-Overlay -->
+    <!-- <div class="headline-card narrative">
+      <div class="headline-background" style="background-image: url('../assets/aerial_1.jpg');"></div>
+      <div class="headline-container">
+        <p class="headline-text">
+          Dies ist eine Geschichte vom Klimawandel. Von Schätzen, die im Meer versinken werden. <br> <br> Aber was wir tun oder lassen, verändert die Welt.
+        </p>
+      </div>
+    </div> -->
 
+
+<!-- Alternativen:
+    Nicht nur das Wetter, sondern auch das Klima bestimmt unser Leben. 
+
+    Der Klimawandel wirkt überall, schon heute schluckt er Küsten und Kulturen. Wie wichtig ist 
+    Ein Dossier
+    Wie das Meer Küsten und Kulturen schluckt
+    Wie du klimafreundlicher lebst
+    Zukunft ist wichtig
+    Und aus der möglichen Zukunft schlüsse zu ziehen -->
+
+    <!--       seitdem Forschende die Wetterdaten systematisch aufzeichnen, war es auf unserem Planeten noch nie so heiß wie im Jahr 2024. Und ob 2025, 2026 oder 2046: Die Chancen stehe gut, dass dieser Satz immer wieder auf's Neue wahr sein wird. Denn die Erde heizt sich weiter auf.
+ -->
+
+<!-- Intention des Editorials: Vorbereiten. Die Bühne setzen. Leuten ein Gefühl geben und sagen, worum es gehen wird. Worum wird es gehen? Die wichtigsten Fragen, die sich ergeben, wenn man sich fragt, welchen Einfluss man auf das Klima haben kann.  -->
+    <!-- <p class="regular-text"> <strong>Liebe Lesende, </strong><br>würden sie einen Kredit aufnehmen, wenn erst ihre Enkelkinder den Kredit zurückzahlen müssten – dafür aber mit deftigen Zinsen? Fragen wie diese stelle ich mir manchmal, wenn ich über den Klimawandel nachdenke.
+    </p>-->  
+    <!--  EVENTUELL SONST BUNKA STATTDESSEN? -->
 
 
       <!-- <div class="media-trigger align-left" data-target="none">
