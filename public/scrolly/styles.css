@@ -396,7 +396,7 @@ body {
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
   max-height: 80vh;
   z-index: 0;
-  pointer-events: none; /* Disable user interactions */
+  pointer-events: none; /* Disable user interactions when inactive and on default*/
 }
 
 /* Multimedia-Ausrichtung */
@@ -407,13 +407,11 @@ body {
   transform: translateY(-50%);
   text-align: left;
   max-width: 40%;
-
 }
 .multimedia-element.multimedia-center {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-
 }
 .multimedia-element.multimedia-right {
   position: fixed;
@@ -422,13 +420,13 @@ body {
   transform: translateY(-50%);
   text-align: right;
   max-width: 40%;
-
 }
 
 /* Beispiel: Aktiver Zustand des Multimedia-Elements */
 .multimedia-element.active {
   transform: scale(1.05);
   opacity: 1;
+  pointer-events: auto;
 }
 
 
@@ -437,7 +435,7 @@ body {
   height: 100vh;
   display: flex;
   align-items: center;
-  font-size: 3em; /* Große Schriftgröße */
+  font-size: 2.5em; /* Große Schriftgröße */
 }
 
 .very-bold-intertitle {
