@@ -8,6 +8,7 @@ template.innerHTML = `
     .expandable-infobox {
       background-color: lightgrey;
       padding: 20px;
+      text-align: left;
     }
 
     .infobox-header {
@@ -104,7 +105,7 @@ class ExpandableInfobox extends HTMLElement {
       .addEventListener('click', () => this.toggle());
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  attributeChangedCallback(name, _oldValue, _newValue) {
     if (['collapsed-height', 'expanded-height'].includes(name)) {
       this.applyHeights();
     }
