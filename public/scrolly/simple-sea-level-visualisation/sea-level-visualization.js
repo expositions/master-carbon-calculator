@@ -11,7 +11,7 @@ class SeaLevelVisualization extends HTMLElement {
 
   render() {
     this.shadowRoot.innerHTML = `
-      <link rel="stylesheet" href="/public/scrolly/simple-sea-level-visualisation/sea-level-styles.css">
+      <link rel="stylesheet" href="/scrolly/simple-sea-level-visualisation/sea-level-styles.css">
       <div id="slr-container">
         <div id="slr-svg-container"></div>
         <div id="slr-text-wrapper">
