@@ -12,6 +12,8 @@
     import { simulateFutureScenario } from '../scenario-data/simulateFutureScenario.js';
     import "./script.js";
     import "./expandable-infobox.js";
+    import "./formula-display.js";
+
 
     const visualization = document.querySelector("sea-level-visualization");
 
@@ -407,15 +409,72 @@
       <p class="regular-text kapitale">Wahrscheinlich sind über Ihrem Kopf gerade einige Glühbirnen erschienen, aber schon auch Fragezeichen. Keine Sorge, das ist normal. Hier einige der wichtigsten Fragen zur Simulation:</p>
       <expandable-infobox collapsed-height="2em" expanded-height="150vh">
         <span slot="headline">Warum steigt das Wasser so spät an?</span>
+        <p style="font-style: italic; border-left: 2px solid #266592ff; padding-left: 10px; margin-left: 0;">Thermal expansion of ocean water, the retreat of mountain glaciers and ice caps, and the mass loss of the Greenland and Antarctic ice sheets are the main drivers of sea-level rise linked to climate change. — Mengel et al.: »Committed sea-level rise under the Paris Agreement and the legacy of delayed mitigation action«, <a href="https://www.nature.com/articles/s41467-018-02985-8">Nature</a> 2018. </p>
+        <p>Gleich mehrere Mechanismen beeinflussen, wie hoch der Meeresspiegel liegt: Wärmeres Wasser dehnt sich, wie die meisten Materialien, aus. Der Meeresspiegel steigt auch, wenn gefrorenes Eis von Gletschern, den Polkappen oder Grönland schmelzen. </p>
+        <p>Doch diese Prozesse laufen nur langsam ab: Eis schmilzt erst mit der Zeit, und je tiefer das Wasser des Ozeans, desto länger dauert es, bis die Wärme der Atmosphäre es erreicht. Dadurch kann es teils sehr lang dauern, bis die Auswirkungen des Klimawandels auf den Meeresspiegel voll sichtbar werden.</p>
       </expandable-infobox>
       <expandable-infobox collapsed-height="2em" expanded-height="150vh">
         <span slot="headline">Warum steigt das Wasser manchmal erst, sinkt und steigt wieder?</span>
+        <p>Das liegt im Wesen dieser Simulation: Im Kern besteht sie aus einigen sicheren Daten, aus denen sie andere Daten errechnet. Konkret berechnet die Simulation zuerst, wie stark die Temperatur bis 2099 steigt. Basierend darauf errechnet sie dann, wie hoch der Meeresspiegel für jedes gegebene Jahr von 2025 bis 12025 liegt.</p>
+        <p>Illustrieren lässt sich das mit einem Beispiel: Bei einer 5-Grad-Erwärmung bis zum Jahr 2100 würden die Gletscher viel schneller schmelzen, der Ozean sich schneller ausdehnen, als wenn die Temperatur 2100 bei 1,5 Grad Celsius höher läge.</p>
+        <p>Für genau diesen Temperaturbereich (1,5 Grad bis 5 Grad im Jahr 2100) verfügt die Simulation über die genauen IPCC-Daten. Hier ist die Berechnung des Meeresspiegels recht akkurat; die Simulation berechnet durch sogenannte Interpolation, wo die fehlenden Datenpunkte zwischen (also <i>innerhalb</i>) den bekannten Datenpunkten liegen sollten.</p>
+        <p>Das Problem ergibt sich aber bei Szenarien, in denen die Temperatur 2100 um weniger als 1,5 Grad oder mehr als 5 Grad ansteigt. Denn diese Fälle sind aus IPCC-Sicht nicht unbedingt realistisch, wir verfügen über keine zugrunde liegenden Simulationsdaten.</p>
+        <p>Um Ihnen dennoch die Möglichkeit zu geben, auch außerhalb dieser bekannten Temperaturen die Effekte der Klimaszenarien zu simulieren, wird von den existierenden Daten auch auf die nicht existierenden Daten <i>außerhalb</i> der bekannten Datenpunkte geschlossen. Die mathematische Methode dafür ist die der Extrapolation.</p>
+        <p>Es gibt verschiedene Wege, verschiedene Formeln, zu extrapolieren. Und je nachdem, welche Formel gewählt wird, wird die Realität anders modelliert. Um Daten zwischen den bekannten Daten zu errechnen, der Interpolation also, nimmt diese Simulation an, dass der Meeresspiegel <i> stetig</i> und <i>linear</i> ansteigt: Es handelt sich um eine <b>lineare Interpolation</b> Außerhalb der bekannten Daten, kommt aber eine andere Methode zum Einsatz: Die <b>quadratische Extrapolation</b>. Hier wird angenommen, dass eine höhere Erwärmung als 5 Grad Celsius den Meeresspiegel noch stärker steigen lässt als innerhalb der Daten. Und dass der Anstieg bei weniger als 1,5 Grad Celsius noch viel geringer ist als innerhalb der bekannten Daten. Das bedeutet, dass bei Szenarien mit geringen oder sehr großen Änderungen bei der Temperatur die simulierten Effekte, wie der Meeresspiegelanstieg, extremer ausfallen können.</p>
+        <p>Im Kern lässt sich nicht vermeiden, eine Annahme über die Realität zu treffen. Wir wissen aber nie, wie es in der Realität wirklich aussieht, wir nähern uns mit unseren Formeln lediglich an. Mit der Folge, dass eben auch unrealistische Ergebnisse entstehen können, gerade an den »Rändern« der Simulation, also da, wo wir keine Daten mehr haben.</p>
+        <p>Dass der Meeresspiegel in der Simulation also nicht immer intuitiv steigt und sinkt, ist vielleicht eine gute Erinnerung, dass nicht alles gleich gut vorhersehbar ist, dass es immer eine Differenz gibt zwischen der Simulation und dem Simulierten. Und dass es ab einem gewissen Punkt auch praktisch sein kann, sich damit abzufinden, dass die Simulation nicht perfekt sein wird – solange sie das abdeckt, was wirklich relevant und praktisch ist.</p>
       </expandable-infobox>
       <expandable-infobox collapsed-height="2em" expanded-height="150vh">
         <span slot="headline">Auf welchen Daten basiert diese Simulation genau?</span>
+        Die Simulation verbindet mehrere Datenquellen. Alle verwendeten Daten lassen sich auch direkt im <a href="https://github.com/expositions/master-carbon-calculator/">Quellcode dieser Website</a> ansehen. Hier aber die Liste:
+        <ul>
+          <li><strong>Prognostizierte Klimadaten</strong></li>
+          <ul>
+            <li>Die Temperatur-Daten bis 2099, in Abhängigkeit vom gesetzten IPCC-Szenario, stammen aus den unterstützenden Daten zur <a href=" https://www.ipcc.ch/report/ar6/wg1/figures/summary-for-policymakers/figure-spm-8">Grafik SPM.8</a> aus der Summary for Policymakers (SPM) des sechsten Berichts des IPCC. Die Daten wurden mithilfe eines Python-Scripts aus den <a href="https://catalogue.ceda.ac.uk/uuid/98af2184e13e4b91893ab72f301790db/">unterstützenden CSV-Dateien</a> des IPCC-Berichts extrahiert.</li>
+            <li>Prognostizierter Anstieg des Meeresspiegels bis zum Jahr 12025 wurde extrahiert aus den Angaben aus <a href="https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_FGD_Chapter09.pdf#page=119"> Sechster Report des IPCC (Intergovernmental Panel on Climate Change)</a>, Tabelle 9.10 auf S. 119.</li>
+            <li>Alle prognosizierten Daten finden sich in der Datei climateConversions.js.</li>
+            <li><a href="https://www.dwd.de/DE/klimaumwelt/klimawandel/klimaszenarien/pdf/szenariennamen.pdf?__blob=publicationFile&v=1">Szenariennamen und Szenario-Beschreibungen</a>, anschließend manuell gekürzt</li>
+          </ul>
+          <li><strong>Länder-Daten zu Emissionen und Populationen</strong></li>
+          <ul>
+            <li><a href="https://github.com/unicode-cldr/cldr-localenames-modern/blob/master/main/de/territories.json">Länder-Codes</a> zur Zuordnung der Ländernamen in der Länderauswahl, zu finden in territories.js</li>
+            <li>Die Treibhaus- und Populationsdaten der einzelnen Länder stammen von Our World in Data/Climate Watch. Der CSV-Datensatz findet sich auf <a href="https://github.com/owid/co2-data">Github</a>. Die CSV-Dateien wurden per Script in ein JSON konvertiert und die vereinfachten Daten in populations.js und derivedData.js gespeichert.</li>
+            <li><a href="https://ourworldindata.org/grapher/ghg-emissions-by-sector?v=1&csvType=full&useColumnShortNames=false">Sektorspezifische Treibhausgasdaten</a> stammen von Our World in Data/Climate Watch. Diese Daten werden aktuell nicht aktiv in der Simulation einbezogen, könnten aber in der nächsten Version benutzt werden, um die Simulation genauer zu gestalten.</li>
+          </ul>
+          <li><strong>Daten zu Emissionen von einzelnen Produkten oder Aktivitäten</strong></li>
+          <ul>
+            <li>Der Produkt-Katalog verwendet die Daten der Webseite https://www.co2everything.com, die Daten liegen in der Datei co2_data.js. </li>
+            <li>Wird die KI-Funktion zum Anlegen von Aktivitäten verwendet, so greift dieses über die API von openAI zurück auf die Sprachmodelle der GPT-4o-Reihe. Diese Modelle sind gepromptet, die Treibhausgas-Äquivalente zu schätzen, die durch die beschriebene Aktivität entstehen. Sie verwenden <i>keine externen Informationen</i>, sondern basieren ihre Antwort ausschließend auf den sogenanten parametrisch gespeicherten Informationen. Anders gesagt: Die Sprachmodelle haben eine statistische Repräsentation von Informationen aus ihrem Trainingsmaterial, wozu zum Beispiel auch größere Korpora von Forschungsarbeiten, aber auch viele andere Internetquellen gehören. Diese Methode ist daher lediglich als grobe Schätzung zu verstehen, die aber in der Regel deutlich bessere Ergebnisse bringt als zu raten. Es ist aber nicht verbürgt, dass die Modelle alle wichtigen Faktoren einbeziehen, fehlerfrei arbeiten oder auf dem neuesten Stand der Daten sind.</li>
+          </ul>
+
+
+        </ul>
       </expandable-infobox>
       <expandable-infobox collapsed-height="2em" expanded-height="150vh">
         <span slot="headline">Wie rechnet diese Simulation?</span>
+        <p>Das Gros der Rechnungen findet sich konzentriert in der Datei simulateFutureScenario.js. Der Hauptteil der Rechnung ist recht simpel:</p>
+        <ol>
+          <li>Für jedes Jahr wird berechnet, wie viel <strong>CO2</strong> in diesem Jahr tatsächlich effektiv ist. (Standardmäßig wird angenommen, dass es etwa 7 Jahre dauert, bis atmosphärische Treibhausgase ihre volle Wirkung entfalten.)</li>
+          <li>Für jedes Jahr wird anschließend berechnet, welche globale <strong>Durchschnittstemperatur</strong> sich aus dieser Menge Treibhausgas in der Atmosphäre ergibt. (Entscheidend ist hier der TCRE, "Transient climate response", ein Faktor, der angibt, wie stark Treibhausgase die Atmosphäre erwärmen.) Gibt es manuelle Änderungen, werden diese zum gewählten IPCC-Szenario ergänzt oder abgezogen.</li>
+          <li>Ausgehend von der Temperatur im Jahr 2099 wird bestimmt, wie stark der <strong>Meeresspiegel-Anstieg</strong> im gewählten Szenario zu jedem Jahr ausfällt. (Die Temperatur 2099 ist dann der Ankerpunkt, von dem aus die Pegelwerte für alle Jahre ausgerechnet werden.)</li>
+        </ol>
+        <p>Diese Berechnung wird standardmäßig für alle Jahre zwischen 2025 und 12025 (in zunehmenden Schrittweiten, um Rechenleistung zu sparen) und für alle Szenarien ausgeführt. Sobald sich ein Wert in einem Szenario ändert, wird die Berechnung neu angestoßen.</p>
+        <h2>Berechnungs-Formeln</h2>
+        <p>Fahre mit der Maus über die Formel, um Erläuterungen zu sehen.</p>
+        <formula-display>
+          <strong>Wie warm wird es in einem Jahr?</strong><br />
+          <formula-var tooltip="Die Variable y steht für das Jahr, also z.B. 2030 oder 4050. T(y) bedeutet dann die geschätzte Durchschnittstemperatur auf der Erde im gesetzten Jahr.">T(y)</formula-var>
+          =
+          <formula-var tooltip="Auch hier steht y für das Jahr. Das niedrig gesetzte IPCC bedeutet hier: Dies ist die gobale Durchschnittstemperatur, die das IPCC laut Klimamodell für dieses Jahr berechnet hat.">T<sub>IPCC</sub>(y)</formula-var>
+          +
+          <formula-var tooltip="TCRE steht für »Transient climate response«. Dieser Wert drückt aus, um wie viel Grad Celsius die Erdtemperatur pro Billion Tonnen CO₂ (das sind genau 1000 Gigatonnen) steigt. Er liegt zwischen 0,27 und 0,63 Grad je Billion Tonnen CO₂, der wahrscheinlichste Wert ist aber 0,45 Grad">TCRE</formula-var>
+          &nbsp;·&nbsp;
+          (
+            <formula-var tooltip="Das ist die Menge CO₂ (in Kilogramm), die durch eine Entscheidung zusätzlich (oder weniger) ausgestoßen wurde – verteilt über die Jahre, bis sie vollständig wirkt.">CO₂<sub>eff</sub>(y)</formula-var>
+            /
+            <formula-var tooltip="Eine Billion Kilogramm – das sind 1.000.000.000.000 kg, 1 Teratonne, oder . Wir teilen durch diesen riesigen Wert, weil das Klima auf diese große Skala reagiert.">10¹²</formula-var>
+          )
+        </formula-display>
       </expandable-infobox>
       <expandable-infobox collapsed-height="2em" expanded-height="150vh">
         <span slot="headline">Wie ist die Simulation beschränkt?</span>
