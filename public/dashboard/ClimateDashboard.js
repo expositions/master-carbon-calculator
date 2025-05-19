@@ -45,7 +45,7 @@ template.innerHTML = `
     }
 
     scenario-selector {
-      flex: 1 1 300px;
+      // flex: 1 1 300px;
       min-width: 300px;
       height: 100%;
       overflow: auto;
