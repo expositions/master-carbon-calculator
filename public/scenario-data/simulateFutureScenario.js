@@ -13,16 +13,15 @@
  * ✅ Es werden immer Werte ausgerechnet für:
  * - Alle Jahre 2025 bis 2100
  * – Jahre 2125 bis 4025 in 25-er-Schritten
- * - Jahre 4125 bis 14025 in 200-er-Schritten
+ * - Jahre 4125 bis 12025 in 200-er-Schritten
  *
  * Berechnungsmethoden:
- * ✅ cumulativeCo2inThisYearDeltaKg = calculateCumulativeCo2Delta(co2DeltaKg, co2ApplicationTimeframe)
+ * ✅ cumulativeCo2DeltaKg = calculateCumulativeCo2Delta(co2DeltaKg, co2ApplicationTimeframe)
  * ✅ cumulativeEffectiveCo2inThisYearDeltaKg = cumulativeEffectiveCo2inThisYearDeltaKg(year, co2DeltaKg, co2ApplicationTimeframe, co2EffectYearSpread)
  * ✅ temperatureDeltaC = simulateTempDeltaPredictionFromCO2Delta(cumulativeEffectiveCo2inThisYearDeltaKg, tcreScenario)
  * ✅ temperatureC = ipccTempPrediction(year, tempScenario = "SSP2_4_5") +  temperatureDeltaC // total temp in the year
  * temp2099 = ipccTempPrediction(2099, tempScenario) + simulateTempDeltaPredictionFromCO2Delta(cumulativeEffectiveCo2inThisYearDeltaKg(2099, co2DeltaKg, co2ApplicationTimeframe, co2EffectYearSpread), tcreScenario); // the 2099 predicted temp is used to determine which temperature-dependent SLR rise is to be selected
  * ✅ seaLevelMm = simulateSLR(year, temp2099, slrScenario = "median").seaLevelMm;
- * ✅ seaLevelMmDelta = simulateSLR(year, temp2099, slrScenario = "median").seaLevelMmDelta;
  *
  *
  * @param {Object} params - Eingabedaten für die Simulation.
@@ -31,18 +30,17 @@
  * @param {string} params.tempScenario - IPCC-Szenario, z.B. "SSP2_4_5" (immer "Mean" internal).
  * @param {string} params.tcreScenario - "low", "mid", oder "high"
  * @param {string} params.slrScenario - "low", "median", oder "high"
- * @param {number} [params.co2EffectYearSpread=7] - Wie viele Jahre die Emissions-Änderung verzögert wirken soll.
+ * @param {number} [params.co2EffectYearSpread=7] - Über wie viele Jahre es braucht, bis die Emissions-Änderung ihre volle Wikrung entfaltet hat.
  * @returns {Object} - Ein Objekt mit "data" (Array der Jahreswerte) + "meta" (zusätzliche Info).
  *
  * data: [
  *   {
  *     year: 2025,
- *     cumulativeCo2inThisYearDeltaKg: ...,
+ *     cumulativeCo2DeltaKg: ...,
  *     cumulativeEffectiveCo2inThisYearDeltaKg: ...,
  *     temperatureC: ...,
  *     temperatureDeltaC: ...,
- *     seaLevelMm: ...,
- *     seaLevelDeltaMm: ...
+ *     seaLevelMm: ...
  *   },
  *   ...
  * ]
@@ -66,16 +64,64 @@ export function simulateFutureScenario(params) {
   // Initialize results array
   const results = [];
 
-  // Calculate cumulative CO2 delta for each year
-  const cumulativeCo2Delta = cumulativeCo2inThisYearDeltaKg(co2DeltaKg, co2ApplicationTimeframe);
+
+/**
+ * Calculates the cumulative CO2 delta over a specified timeframe.
+ *
+ * This function computes the total change in CO2 emissions over a given number of years.
+ * It multiplies the annual CO2 delta by the number of years the change is applied.
+ *
+ * @param {number} co2DeltaKg - The annual change in CO2 emissions in kilograms.
+ * @param {number} co2ApplicationTimeframe - The number of years over which the CO2 change is applied.
+ * @returns {number} - The cumulative CO2 delta in kilograms over the specified timeframe.
+ */
+  function cumulativeCo2DeltaKg(co2DeltaKg, co2ApplicationTimeframe) {
+    return co2DeltaKg * co2ApplicationTimeframe;
+  }
+
+
+/**
+ * Calculates the cumulative effective CO2 delta for a given year.
+ *
+ * This function computes the total change in effective atmospheric CO2 for a specific year,
+ * taking into account the spread of CO2 effect over multiple years.
+ *
+ * @param {number} year - The year for which the cumulative effective CO2 delta is calculated.
+ * @param {number} co2DeltaKg - The annual change in CO2 emissions in kilograms.
+ * @param {number} co2ApplicationTimeframe - The number of years over which the CO2 change is applied.
+ * @param {number} co2EffectYearSpread - The number of years it takes for the CO2 effect to fully manifest.
+ * @returns {number} - The cumulative effective CO2 delta in kilograms for the specified year.
+ */
+  function cumulativeEffectiveCo2inThisYearDeltaKg(year, co2DeltaKg, co2ApplicationTimeframe, co2EffectYearSpread) {
+    let totalEffect = 0;
+    const baseYear = 2025;
+
+    for (let i = baseYear; i < baseYear + co2ApplicationTimeframe; i++) {
+      if (year < i) continue; // Future emissions don't contribute
+
+      let effect;
+      if (year < i + co2EffectYearSpread) {
+        effect = (co2DeltaKg / co2EffectYearSpread) * (year - i);
+      } else {
+        effect = co2DeltaKg;
+      }
+
+      totalEffect += effect;
+    }
+
+    return totalEffect;
+  }
+
+  // Calculate cumulative CO2 delta over the years
+  const cumulativeCo2Delta = cumulativeCo2DeltaKg(co2DeltaKg, co2ApplicationTimeframe);
 
   // Calculate cumulative effective CO2 delta for each year
-  const cumulativeEffectiveCo2Delta = allYears.map(year => 
+  const cumulativeEffectiveCo2Delta = allYears.map(year =>
     cumulativeEffectiveCo2inThisYearDeltaKg(year, co2DeltaKg, co2ApplicationTimeframe, co2EffectYearSpread)
   );
 
   // Calculate temperature delta for each year
-  const temperatureDeltas = cumulativeEffectiveCo2Delta.map(delta => 
+  const temperatureDeltas = cumulativeEffectiveCo2Delta.map(delta =>
     simulateTempDeltaPredictionFromCO2Delta(delta, tcreScenario)
   );
 
@@ -92,7 +138,7 @@ export function simulateFutureScenario(params) {
 
     results.push({
       year,
-      cumulativeCo2inThisYearDeltaKg: cumulativeCo2Delta,
+      cumulativeCo2DeltaKg: cumulativeCo2Delta,
       cumulativeEffectiveCo2inThisYearDeltaKg: cumulativeEffectiveCo2Delta[index],
       temperatureC,
       temperatureDeltaC,
@@ -131,32 +177,20 @@ export function collectAllYears() {
   return result;
 }
 
-function cumulativeCo2inThisYearDeltaKg(co2DeltaKg, co2ApplicationTimeframe) {
-  return co2DeltaKg * co2ApplicationTimeframe;
-}
-
-function cumulativeEffectiveCo2inThisYearDeltaKg(year, co2DeltaKg, co2ApplicationTimeframe, co2EffectYearSpread) {
-  let totalEffect = 0;
-  const baseYear = 2025;
-
-  for (let i = baseYear; i < baseYear + co2ApplicationTimeframe; i++) {
-    if (year < i) continue; // Future emissions don't contribute
-
-    let effect;
-    if (year < i + co2EffectYearSpread) {
-      effect = (co2DeltaKg / co2EffectYearSpread) * (year - i);
-    } else {
-      effect = co2DeltaKg;
-    }
-
-    totalEffect += effect;
-  }
-
-  return totalEffect;
-}
-
 
 import { TCRE, KGCO2_TO_TTCO2 } from './climateConversions.js';
+
+/**
+ * Predicts the temperature delta based on the cumulative effective CO2 emissions for a given year and TCRE scenario.
+ *
+ * @param {number} cumulativeEffectiveCo2inThisYearDeltaKg - The cumulative effective CO2 emissions in kilograms for the given year.
+ * @param {string} tcreScenario - The TCRE scenario to use for the prediction (e.g., "low", "median", "high").
+ * @returns {number} - The predicted temperature delta in degrees Celsius.
+ *
+ * This function converts the cumulative effective CO2 emissions from kilograms to teratonnes of CO2 (TtCO2),
+ * retrieves the TCRE value based on the provided scenario, and calculates the temperature delta by multiplying
+ * the converted CO2 emissions with the TCRE value.
+ */
 function simulateTempDeltaPredictionFromCO2Delta(cumulativeEffectiveCo2inThisYearDeltaKg, tcreScenario) {
   // Convert cumulative effective CO2 in this year from kg to TtCO2
   const cumulativeEffectiveCo2inThisYearDeltaTtCO2 = cumulativeEffectiveCo2inThisYearDeltaKg * KGCO2_TO_TTCO2;
@@ -171,18 +205,17 @@ function simulateTempDeltaPredictionFromCO2Delta(cumulativeEffectiveCo2inThisYea
 }
 
 import { climateScenarioTemperature } from './climateConversions.js';
-function calculateTotalTemperature(year, tempScenario, temperatureDeltaC) {
-
-  function ipccTempPrediction(year, tempScenario = "SSP2_4_5") {
-    if (year > 2099) {
-      year = 2099;
-    }
-    if (!climateScenarioTemperature[year] || !climateScenarioTemperature[year][tempScenario]) {
-      throw new Error(`Temperature data for year ${year} and scenario ${tempScenario} not found.`);
-    }
-    return climateScenarioTemperature[year][tempScenario]["Mean"];
+function ipccTempPrediction(year, tempScenario = "SSP2_4_5") {
+  if (year > 2099) {
+    year = 2099;
   }
+  if (!climateScenarioTemperature[year] || !climateScenarioTemperature[year][tempScenario]) {
+    throw new Error(`Temperature data for year ${year} and scenario ${tempScenario} not found.`);
+  }
+  return climateScenarioTemperature[year][tempScenario]["Mean"];
+}
 
+function calculateTotalTemperature(year, tempScenario, temperatureDeltaC) {
   const baseTemperature = ipccTempPrediction(year, tempScenario);
   return baseTemperature + temperatureDeltaC;
 }
@@ -207,7 +240,7 @@ export function simulateSLR(year, temp2099, scenario = "median") {
     const slrValues = [slr2020, slr2100, slr4025, slr12025];
 
     if (year >= 2020 && year <= 12025) {
-        return logarithmicInterpolation(year, knownYears, slrValues);
+        return monotonicLinearInterpolation(year, knownYears, slrValues);
     }
     return powerLawExtrapolation(year, knownYears, slrValues); // TODO: this is probably superfluous as we don't simulate beyond 10000Y, and we do have actual hist data for earlier than 2020?
 }
@@ -240,7 +273,6 @@ function getSLRByTemp(temp2099, slrDataset, scenario) {
     if (temp2099 >= 1.5 && temp2099 <= 5.0) {
         return linearInterpolation(temp2099, knownTemps, slrValues);
     }
-
     return quadraticExtrapolation(temp2099, knownTemps, slrValues);
 }
 
@@ -261,6 +293,19 @@ function linearInterpolation(x, xVals, yVals) {
     }
     return yVals[0]; // Default case (shouldn't happen)
 }
+
+function monotonicLinearInterpolation(x, xVals, yVals) {
+  for (let i = 0; i < xVals.length - 1; i++) {
+      if (xVals[i] <= x && x <= xVals[i + 1]) {
+          const x0 = xVals[i], x1 = xVals[i + 1];
+          const y0 = yVals[i], y1 = yVals[i + 1];
+          if (x1 === x0) return y0; // Sicherheit
+          return y0 + ((y1 - y0) / (x1 - x0)) * (x - x0);
+      }
+  }
+  return x < xVals[0] ? yVals[0] : yVals[yVals.length - 1]; // robustes Fallback
+}
+
 
 /**
  * Quadratic extrapolation for temperatures outside known range.
@@ -284,25 +329,6 @@ function quadraticExtrapolation(x, xVals, yVals) {
     const result = a * x ** 2 + b * x + c;
 
     return result;
-}
-
-/**
- * Logarithmic interpolation for years within range.
- * @param {number} x - Year to interpolate.
- * @param {number[]} xVals - Known years.
- * @param {number[]} yVals - Corresponding sea level values.
- * @returns {number} - Interpolated value.
- */
-function logarithmicInterpolation(x, xVals, yVals) {
-    for (let i = 0; i < xVals.length - 1; i++) {
-        if (xVals[i] <= x && x <= xVals[i + 1]) {
-            const x0 = Math.log(xVals[i]), x1 = Math.log(xVals[i + 1]);
-            const y0 = yVals[i], y1 = yVals[i + 1];
-            const logX = Math.log(x);
-            return y0 + ((y1 - y0) / (x1 - x0)) * (logX - x0);
-        }
-    }
-    return yVals[0]; // Default case (shouldn't happen)
 }
 
 /**
