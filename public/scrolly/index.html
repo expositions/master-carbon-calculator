@@ -110,7 +110,7 @@
         <div class="metadata-author-box">
           <span class="author-name"><a href="#author-modal" class="author-link"> von Nils Erich</a></span>
           <div class="publication-info">
-            <span class="publication-date">Zuletzt aktualisiert am 11. Mai 2025</span>
+            <span class="publication-date">Zuletzt aktualisiert am 20. Mai 2025</span>
           </div>
         </div>
       </div>
@@ -462,32 +462,77 @@
         <h2>Berechnungs-Formeln</h2>
         <p>Fahre mit der Maus über die Formel, um Erläuterungen zu sehen.</p>
         <formula-display>
-          <strong>Wie warm wird es in einem Jahr?</strong><br />
-          <formula-var tooltip="Die Variable y steht für das Jahr, also z.B. 2030 oder 4050. T(y) bedeutet dann die geschätzte Durchschnittstemperatur auf der Erde im gesetzten Jahr.">T(y)</formula-var>
+          <strong>Wie viel CO₂ wirkt im gesetzten Jahr aufs Klima?</strong><br />
+          <formula-var tooltip="Die Variable y steht für das Jahr, also z.B. 2030 oder 4050. Dieses Element bedeutet dann die Menge CO₂, die im Jahr y zur Erderwärmung beiträgt. Dies kann auch ein negativer Wert sein, sofern CO₂ eingespart wird.">CO₂<sub>eff</sub>(y)</formula-var>
+          =
+          <formula-var tooltip="Die gesamte Emissionsänderung (positiv oder negativ) im Jahr 2025. Das Zeichen Δ (sprich: Delta) steht für die Veränderung gegenüber dem normalen Verlauf.">ΔCO₂<sub>2025</sub></formula-var>
+          +
+          <formula-var tooltip="Die Emissionsänderung im Jahr 2026. ">ΔCO₂<sub>2026</sub></formula-var>
+          +
+          <formula-var tooltip="Die Emissionen aller Jahre vor y werden hier aufaddiert.">…</formula-var>
+        </formula-display>
+        <p>Achtung: Um den Effekt zu simulieren, dass Emissionen erst über eine gewisse Zeit voll wirksam werden, werden die Emissionen der letzten sieben Jahren vor dem gesetzten Jahr nur anteilig eingerechnet.</p>
+
+        <formula-display>
+          <strong>Wie warm wird es im ausgewählten Jahr?</strong><br />
+          <formula-var tooltip="T(y) bedeutet dann die geschätzte Durchschnittstemperatur auf der Erde im gesetzten Jahr.">T(y)</formula-var>
           =
           <formula-var tooltip="Auch hier steht y für das Jahr. Das niedrig gesetzte IPCC bedeutet hier: Dies ist die gobale Durchschnittstemperatur, die das IPCC laut Klimamodell für dieses Jahr berechnet hat.">T<sub>IPCC</sub>(y)</formula-var>
           +
-          <formula-var tooltip="TCRE steht für »Transient climate response«. Dieser Wert drückt aus, um wie viel Grad Celsius die Erdtemperatur pro Billion Tonnen CO₂ (das sind genau 1000 Gigatonnen) steigt. Er liegt zwischen 0,27 und 0,63 Grad je Billion Tonnen CO₂, der wahrscheinlichste Wert ist aber 0,45 Grad">TCRE</formula-var>
+          <formula-var tooltip="TCRE steht für »Transient Climate Response«. Dieser Wert drückt aus, um wie viel Grad Celsius die Erdtemperatur pro Teratonne CO₂ steigt, also pro Billion Tonnen CO₂. Er liegt zwischen 0,27 und 0,63 Grad je Teratonne, der wahrscheinlichste Wert ist aber 0,45 Grad.">TCRE</formula-var>
           &nbsp;·&nbsp;
           (
-            <formula-var tooltip="Das ist die Menge CO₂ (in Kilogramm), die durch eine Entscheidung zusätzlich (oder weniger) ausgestoßen wurde – verteilt über die Jahre, bis sie vollständig wirkt.">CO₂<sub>eff</sub>(y)</formula-var>
-            /
-            <formula-var tooltip="Eine Billion Kilogramm – das sind 1.000.000.000.000 kg, 1 Teratonne, oder . Wir teilen durch diesen riesigen Wert, weil das Klima auf diese große Skala reagiert.">10¹²</formula-var>
+          <formula-var tooltip="Das ist die Menge CO₂ (in Kilogramm), die durch eine Entscheidung zusätzlich (oder weniger) ausgestoßen wurde – verteilt über die Jahre, bis sie vollständig wirkt.">CO₂<sub>eff</sub>(y)</formula-var>
+          /
+          <formula-var tooltip="10¹⁵ entspricht einer Billiarde (1.000.000.000.000.000). Wir teilen durch die Billiarde, um von Kilogramm auf Teratonnen umzurechnen. Das ist die Maßeinheit des TCRE, und für eine korrekte Rechnung müssen die Maßeinheiten zueinander korrekt gerechnet werden.">10¹⁵</formula-var>
           )
         </formula-display>
+
+        <formula-display>
+          <strong>Wie stark steigt der Meeresspiegel im gesetzten Jahr?</strong><br />
+          <formula-var tooltip="Der Meeresspiegelanstieg im Jahr y, gemessen in Millimetern.">SLR(y)</formula-var>
+          =
+          <formula-var tooltip="Interpolation ist die Berechnung von Werten zwischen bekannten Punkte.">Interpolation</formula-var>
+          (
+            <formula-var tooltip="Messwert für den Meeresspiegelanstieg 2020 im Vergleich zum Durchschnitt 1995–2014 (ca. 213 mm).">SLR(2020)</formula-var>,
+            <formula-var tooltip="Prognose für 2100, basierend auf der globalen Temperatur im Jahr 2099 (inkl. CO₂-Effekt).">SLR(2100 | T<sub>2099</sub>)</formula-var>,
+            <formula-var tooltip="Prognose für 4025, ebenfalls basierend auf der globalen Temperatur 2099.">SLR(4025 | T<sub>2099</sub>)</formula-var>,
+            <formula-var tooltip="Prognose für 12025, ebenfalls basierend auf der globalen Temperatur 2099.">SLR(12025 | T<sub>2099</sub>)</formula-var>,
+            <formula-var tooltip="Das Jahr, für das wir den Meeresspiegel berechnen wollen (z. B. 2100, 3000 oder 12025).">y</formula-var>
+          )
+        </formula-display>
+        <p>
+          <strong>So arbeitet die Interpolation</strong><br />
+          Zwischen den vier bekannten Jahren (2020, 2100, 4025, 12025) wird der Wert für SLR(y) durch eine gerade Linie zwischen den jeweils benachbarten Punkten bestimmt.
+          Die Punkte für 2100, 4025 und 12025 hängen alle von der globalen Temperatur im Jahr 2099 ab – je wärmer es dann ist, desto höher liegen alle diese Punkte.
+        </p>
+
       </expandable-infobox>
       <expandable-infobox collapsed-height="2em" expanded-height="150vh">
-        <span slot="headline">Wie ist die Simulation beschränkt?</span>
-      </expandable-infobox>
-      <expandable-infobox collapsed-height="2em" expanded-height="150vh">
-        <span slot="headline">Warum bringen so viele Tätigkeiten so gut wie garnichts?</span>
-      </expandable-infobox>
-      <expandable-infobox collapsed-height="2em" expanded-height="150vh">
-        <span slot="headline">Was bringt denn überhaupt etwas gegen den Klimawandel? </span>
+        <span slot="headline">Welche Grenzen sind der Simulation gesetzt?</span>
+        <p>Simulationen sind grundsätzlich unterschiedlich von der Realität (wie in der Frage zum steigenden und wieder sinkenden Meeresspiegel erwähnt). Die Ergebnisse dieser Simulation sind nur Modellierungen davon, wie die Dinge und Menschen sich in echt verhalten. Vor allem ist diese Simulation eine Vereinfachung der realen Vorgänge. Das ist zwar auch notwendig, weil wir schließlich nie mit Sicherheit wissen, wie Dinge in der Zukunft aussehen – und wir wollen ja dennoch Szenarien testen.</p>
+        <p>Dennoch hilft es, die spezifischen Grenzen und Vereinfachungen einer Simulation zu kennen. Diese Simulation ist in mehreren Weisen konkret und abstrakt <strong>beschränkt</strong>.</p>
+        <p>Die Zukunft wird aus den gegenwärtigen Verhältnissen abgeleitet. Allein, wie viele Emissionen ein Smartphone über seine Lebenszeit verursacht, verändert sich durch die Weiterentwicklung der Technologie massiv. Wir wissen ja nicht mal, ob in 20 Jahren noch so viele Smartphones oder schon ganz andere Geräte verwendet werden. Das bedeutet, dass wir eigentlich nicht seriös mit den aktuellen Daten allzu weit in die Zukunft prognostizieren können. <i>Pragmatisch heißt das:</i> Setzen Sie lieber kurze Simulationszeiträume an.</p>
+        <p>In ähnlicher Weise wird rechnerisch der Meeresspiegel allein aus der prognostizierten Temperatur des Jahres 2100 abgeleitet. Wenn Sie also simulieren würden, was es fürs Klima hieße, ab jetzt 200 Jahre lang jährlich ein Macbook zu kaufen, dann würden nur die Emissionen bis zum Jahr 2100 einbezogen und blieben danach wirkungslos.<i>Pragmatisch heißt das:</i> Setzen Sie einen maximalen Simulationszeitraum bis 75 Jahre, bis zum Jahr 2100.</p>
+        <p>Die Simulation bezieht auch nicht ein, dass eine Vielzahl von Faktoren auf das Klima und die Gesellschaft einwirken; politische, wirtschaftliche, technologische Entwicklungen etwa. Diese sind zum Teil in den Simulationsdaten des IPCC eingefasst, aber nicht in den von Ihnen eingestellten Verhaltensänderungen der Menschen. <i>Pragmatisch heißt das:</i> Überlegen Sie sich, ob und wie die von Ihnen eingegebenen Verhaltensänderungen von Zukunftstrends betroffen sein könnten. Je volatiler die gesellschaftlichen Kontexte einer Verhaltensänderung, desto unsicherer die Vorhersage.</p>
+        <p>Auch die natürlichen Systeme und wie sie auf Klima-Änderungen reagieren, wird lediglich durch die IPCC-Daten ungefähr simuliert. Klimatische Kipppunkte, Erholungen, Rückkopplungsprozesse wie die Aufnahme von CO2 durch die Meere werden bei den eingegebenen Verhaltensänderungen nur oberflächlich mit simuliert. <i>Pragmatisch heißt das:</i> Je größer die beschriebene Verhaltensänderung, desto größer die Abweichung von der tatsächlich zu erwartenden Reaktion des Planeten.</p>
+        <p>Der Meeresspiegel wird weltweit als eine Konstante gesetzt. Dabei entwickelt sich der Meeresspiegel weltweit ungleich: An Orten mit bestimmten Winden oder Strömungen steigt das Wasser durch den Klimawandel stärker an, an anderen weniger stark. Dazu kommen Entwicklungen wie das Absinken des Landes in der südlichen Ostsee, weil die skandinavische Masse sich im Gegenzug immer noch hebt seit der letzten Eiszeit. All diese feinen und weniger feinen Unterschiede berechnet diese Simulation nicht ein. <i>Pragmatisch heißt das:</i> Seien Sie sich bewusst, dass der Meeresspiegel durchaus noch stärker, oder auch schwächer ausfallen kann. Wir wissen es nicht genau.</p>
+        <p>Allen Menschen eines Landes rechnet die Simulation indes denselben Pro-Kopf-Emissionswert zu. Dabei gibt es in vielen Ländern sehr deutliche Unterschiede etwa zwischen Arm und Reich oder Stadt und Land. Die Skalierungseffekte einer Verhaltensänderung können in Wirklichkeit noch kleiner ausfallen, da etwa viele Menschen in Indien gar nicht erst jährliche Flüge haben, die sie einsparen könnten. <i>Pragmatisch heißt das: </i>Überlege dir, ob deine eingegebene Verhaltensänderung real ist.</p>
+        <p>Zudem arbeitet die Simulation mit diskreten, einfachen Zahlen, statt darzustellen, von wo bis wo die Schätzung reicht. Dabei sind fast alle Daten auch des IPCC Schätzungen mit niedrigen, hohen und angenommenen Mittelwerten. Diese Simulation stützt sich im Standard auf diese Mittelwerte. Dabei ist etwa gut möglich, dass der Meeresspiegel schneller stärker ansteigt als der Mittelwert es angibt. <i>Pragmatisch heißt das: </i>Vergiss nicht, dass selbst die Zukunftsprognose nicht sehr sicher ist. Probiere auch die Optionen aus, in denen du den Ansteig des Meeresspiegels auf hoch oder niedrig setzt, nicht nur "medium".</p>
+        <h2>Wichtigste Schlüsse</h2>
+        <p>Beachte immer die mögliche Abweichung von Modell und Realität. Bedenke genau, welche Annahmen du kalkulierst und ob diese realistisch sind. Zeige ein gesundes Misstrauen gegenüber den Ergebnissen – insbesondere, je stärker die angegebenen Verhaltensänderungen sind.</p>
       </expandable-infobox>
       <p class="regular-text">Haben Sie noch weitere Fragen, Anmerkungen, Kritik? Schreiben Sie mir gern direkt eine Mail an <a href="mailto:presse.nils.erich@gmail.com">presse.nils.erich@gmail.com</a>.</p>
     </div>
   </div>
+
+
+  <expandable-infobox collapsed-height="2em" expanded-height="150vh">
+    <span slot="headline"></span>
+  </expandable-infobox>
+  <expandable-infobox collapsed-height="2em" expanded-height="150vh">
+    <span slot="headline">Was bringt denn überhaupt etwas gegen den Klimawandel? </span>
+  </expandable-infobox>
 
 
   <!-- Verstehen-Teil -->
@@ -498,8 +543,11 @@
 
       <!-- Verstehen Teil 1 -->
       <div class="subsection" id="verstehen-1">
+        <h3 class="section-subhead">Warum bringen so viele Tätigkeiten so gut wie garnichts?</h3>
+        <p class="regular-text">Viele gutgemeinte Maßnahmen zeigen kaum Wirkung. In diesem Abschnitt geht es darum, Konsumkritik einzuordnen.</p>
+
         <h3 class="section-subhead">Was bringt eigentlich was?</h3>
-        <p class="regular-text">Viele gutgemeinte Maßnahmen zeigen kaum Wirkung – andere dagegen sehr viel. In diesem Abschnitt geht es darum, Konsumkritik einzuordnen, Handlungsspielräume zu verstehen und Verantwortung neu zu denken.</p>
+        <p class="regular-text">Viele gutgemeinte Maßnahmen zeigen kaum Wirkung – andere dagegen sehr viel. In diesem Abschnitt geht es darum, Handlungsspielräume zu verstehen und Verantwortung anders zu denken.</p>
         <!-- Optional: Bild oder Grafik hier -->
       </div>
 
