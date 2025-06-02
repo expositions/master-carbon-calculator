@@ -181,7 +181,7 @@ export class ClimateDashboard extends HTMLElement {
     startSimulationLoop();
 
     const shadowRoot = this.shadowRoot;
-    const drawer = shadowRoot.getElementById('scenarioDrawer');
+    // const drawer = shadowRoot.getElementById('scenarioDrawer');
     const handle = shadowRoot.getElementById('drawerHandle');
     const backdrop = shadowRoot.getElementById('drawerBackdrop');
 

@@ -236,6 +236,7 @@ export class LLMChat extends HTMLElement {
   padding: 6px 10px;
   color: white;
   height: 2.8em;
+  min-height: 2.5em;
 }
 .chip {
   background: #005ad6;

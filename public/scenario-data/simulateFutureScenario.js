@@ -76,9 +76,9 @@ export function simulateFutureScenario(params) {
  * @param {number} co2ApplicationTimeframe - The number of years over which the CO2 change is applied.
  * @returns {number} - The cumulative CO2 delta in kilograms over the specified timeframe.
  */
-  function cumulativeCo2DeltaKg(co2DeltaKg, co2ApplicationTimeframe) {
-    return co2DeltaKg * co2ApplicationTimeframe;
-  }
+  // function cumulativeCo2DeltaKg(co2DeltaKg, co2ApplicationTimeframe) {
+  //   return co2DeltaKg * co2ApplicationTimeframe;
+  // }
 
 
   /**
@@ -131,7 +131,7 @@ export function simulateFutureScenario(params) {
   }
 
   // Calculate cumulative CO2 delta over the years
-  const cumulativeCo2Delta = cumulativeCo2DeltaKg(co2DeltaKg, co2ApplicationTimeframe);
+  // const cumulativeCo2Delta = cumulativeCo2DeltaKg(co2DeltaKg, co2ApplicationTimeframe);
 
   // Calculate cumulative effective CO2 delta for each year
   const cumulativeEffectiveCo2Delta = allYears.map(year =>

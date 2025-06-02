@@ -86,7 +86,22 @@ function initOrchestrator() {
   const { chats: conversations, activeChatId } = loadConversations();
   chat.loadConversation(conversations[activeChatId]);
 
-  // 2. Toolbar actions: "+" (new), "☰" (drawer)
+  // 2. Send the first assistant message
+  chat.sendBot("Hallo! Hier kannst du alles Mögliche simulieren. Zum Beispiel, was klimafreundlicher ist: 500 Kilometer Autofahren oder ein Kilo Rindfleisch essen? Wie stark steigt der Meeresspiegel, wenn die Menschheit einfach weitermacht wie bisher? Du kannst testen, was mehr bringt: Wenn Millionen Menschen ihren Konsum einschränken – oder wenn die Stromversorgung voll regenerativ funktionierte?",
+    [
+      "Hähnchen- statt Kalbsdöner",
+      "Deutsche Moore wiedervernässen",
+      "Täglich Tee statt Kaffee",
+      "Strom dekarbonisieren",
+      "500 km Autofahren vs. 1 kg Rindfleisch",
+      "Radfahren statt Auto",
+      "Einfamilienhaus sanieren statt neu bauen",
+      "1 Paar gebrauchte Sneaker pro Jahr statt neue",
+      "50% weniger motorisierter Individualverkehr"
+    ]
+  );
+
+  // 3. Toolbar actions: "+" (new), "☰" (drawer)
   chat.addEventListener('new-conversation-request', () => {
     const id = crypto.randomUUID();
     conversations[id] = { id, name: 'New Chat', messages: [], profile: {} };
@@ -151,7 +166,7 @@ function initOrchestrator() {
     }
   });
 
-  // 3. Chat message flow
+  // 4. Chat message flow
   chat.addEventListener('user-message', async e => {
     const userText = e.detail.text;
     const convo = conversations[chat._id];
@@ -168,7 +183,7 @@ function initOrchestrator() {
         const expertResp = await callExpertLLM(convo);
         await applyExpertLLMResponse(expertResp);
       } catch (err) {
-        await replacePlaceholder('❌ Fehler bei der Szenariokonfiguration.');
+        await replacePlaceholder('❌ Fehler bei der Szenariokonfiguration: ', err);
       }
     } else {
       // Normal agentic flow
@@ -176,7 +191,7 @@ function initOrchestrator() {
         const resp = await callAgenticLLM(convo);
         await applyAgenticLLMResponse(resp);
       } catch (err) {
-        await replacePlaceholder('❌ Fehler beim Abrufen der Antwort.');
+        await replacePlaceholder('❌ Fehler beim Abrufen der Antwort: ', err);
       }
     }
   });
@@ -521,7 +536,7 @@ async function applyAgenticLLMResponse(resp) {
       const expertResp = await callExpertLLM(convo);
       await applyExpertLLMResponse(expertResp);
     } catch (err) {
-      await replacePlaceholder('❌ Fehler bei der Szenariokonfiguration.');
+      await replacePlaceholder('❌ Fehler bei der Szenariokonfiguration: ', err);
     }
   }
 }
