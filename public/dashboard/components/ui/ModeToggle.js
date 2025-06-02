@@ -5,13 +5,12 @@ template.innerHTML = `
   <style>
     .mode-toggle {
       background: #fff;
-      border: 0px solid #ddd;
+      border: 1px solid #ddd;
       border-radius: 8px;
       text-align: center;
       font-family: 'Aboreto', serif;
       box-shadow: 0 2px 5px rgba(0,0,0,0.04);
       display: flex;
-      flex-direction: row;
       justify-content: center;
       align-items: center;
       overflow: hidden;
@@ -30,17 +29,11 @@ template.innerHTML = `
       font-weight: bold;
       color: #000;
       line-height: 1.1;
-      height: 100%;
+      border-radius: 8px;
       width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-    button:first-child {
-      border-radius: 8px 0 0 8px;
-    }
-    button:last-child {
-      border-radius: 0 8px 8px 0;
     }
     button.active {
       background: #28b200;
@@ -48,8 +41,7 @@ template.innerHTML = `
     }
   </style>
   <div class="mode-toggle">
-    <button data-mode="absolute">Abs</button>
-    <button data-mode="delta">Δ</button>
+    <button data-mode="delta">Vergleichen mit …</button>
   </div>
 `;
 
@@ -60,25 +52,22 @@ export class ModeToggle extends HTMLElement {
   }
 
   connectedCallback() {
-    const buttons = this.shadowRoot.querySelectorAll('button');
+    const button = this.shadowRoot.querySelector('button');
 
     /**
      * USER-INTERAKTION:
      * Klick auf Button → aktives Styling setzen + Store aktualisieren
      */
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const mode = btn.dataset.mode;
+    button.addEventListener('click', () => {
+      const currentMode = store.getState().displayMode;
+      const newMode = currentMode === 'delta' ? 'absolute' : 'delta';
 
-        if (store.getState().displayMode !== mode) {
-          store.setState({ displayMode: mode });
+      store.setState({ displayMode: newMode });
 
-          // Beim Umschalten auf "absolute" Vergleichsszenario entfernen
-          if (mode === 'absolute') {
-            store.setState({ comparisonScenarioId: null });
-          }
-        }
-      });
+      // Beim Umschalten auf "absolute" Vergleichsszenario entfernen
+      if (newMode === 'absolute') {
+        store.setState({ comparisonScenarioId: null });
+      }
     });
 
     /**
@@ -100,18 +89,15 @@ export class ModeToggle extends HTMLElement {
       this._unsubscribeStore = null;
     }
   }
-  
 
   /**
    * Setzt visuell den aktiven Button anhand des Modus.
    * @param {string} mode - "absolute" oder "delta"
    */
   _setActiveButton(mode) {
-    const buttons = this.shadowRoot.querySelectorAll('button');
-    buttons.forEach(btn => {
-      const isActive = btn.dataset.mode === mode;
-      btn.classList.toggle('active', isActive);
-    });
+    const button = this.shadowRoot.querySelector('button');
+    const isActive = mode === 'delta';
+    button.classList.toggle('active', isActive);
   }
 
   /**
@@ -119,8 +105,7 @@ export class ModeToggle extends HTMLElement {
    * @returns {string}
    */
   getMode() {
-    const activeBtn = this.shadowRoot.querySelector('button.active');
-    return activeBtn?.dataset.mode || 'absolute';
+    return store.getState().displayMode || 'absolute';
   }
 }
 

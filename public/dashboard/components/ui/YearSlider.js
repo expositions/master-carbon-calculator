@@ -9,7 +9,8 @@ template.innerHTML = `
     }
 
     .slider-container {
-      width: 100%;
+      transform: translateX(5%);
+      width: 90%;
       padding: 10px;
       text-align: center;
     }

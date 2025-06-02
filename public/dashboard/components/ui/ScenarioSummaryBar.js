@@ -26,16 +26,9 @@ template.innerHTML = `
       flex: 1 1 33%;
     }
 
-    mode-toggle {
-      display: flex;
-      margin: 5px;
-      box-sizing: border-box;
-      flex: 1 1 20%;
-    }
   </style>
 
   <div class="scenario-summary-bar">
-    <mode-toggle id="modeToggle"></mode-toggle>
     <div class="value-card-wrapper">
       <mini-value-card id="co2" label="Zusätzliches CO₂ ggü. 2025" value="–"></mini-value-card>
       <mini-value-card id="temp" label="Temperatur ggü. ø1850-1900" value="–"></mini-value-card>

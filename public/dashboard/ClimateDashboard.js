@@ -24,8 +24,9 @@ template.innerHTML = `
     .dashboard-container {
       display: flex;
       flex-direction: column;
-      height: 100vh;
-      width: 100vw;
+      height: 90vh;
+      transform: translateX(1vw);
+      width: 98vw;
       overflow: hidden;
       box-sizing: border-box;
       padding: 10px;
@@ -67,8 +68,8 @@ template.innerHTML = `
       justify-content: center;
       min-width: 0;
       min-height: 0;
-      max-height: 100%;
-      overflow: scroll;
+      max-height: 90vh;
+      overflow: hidden;
       position: relative;
     }
 
@@ -161,15 +162,16 @@ template.innerHTML = `
     <div class="drawer-handle" id="drawerHandle" title="Szenarien anzeigen" tabindex="0" aria-label="Szenarien anzeigen">
       &#9776;
     </div>
-    <scenario-summary-bar id="summaryBar"></scenario-summary-bar>
     <div class="main-panel">
-        <llm-chat id="chat"></llm-chat>      <div class="visualization-wrapper">
+      <llm-chat id="chat"></llm-chat>
+      <div class="visualization-wrapper">
         <div class="visualization-aspect-ratio">
+          <scenario-summary-bar id="summaryBar"></scenario-summary-bar>
           <sea-level-visualization-dashboard hide-text></sea-level-visualization-dashboard>
+          <year-slider></year-slider>
         </div>
       </div>
     </div>
-    <year-slider></year-slider>
     <scenario-editor></scenario-editor>
     <activity-catalog></activity-catalog>
     <activity-editor></activity-editor>

@@ -151,9 +151,14 @@ export class LLMChat extends HTMLElement {
 :host {
   display: flex;
   flex-direction: column;
+  max-width: 60%;
+  width: 70%;
   height: 100%;
   font-family: system-ui;
   position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: wrap;
 }
 
 /* Toolbar */
