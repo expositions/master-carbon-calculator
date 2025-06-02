@@ -47,6 +47,7 @@ template.innerHTML = `
 export class ScenarioSummaryBar extends HTMLElement {
   constructor() {
     super();
+    console.log('[ScenarioSummaryBar] Constructor called');
     this.attachShadow({ mode: 'open' }).appendChild(template.content.cloneNode(true));
 
     this.co2Card = null;
@@ -55,10 +56,12 @@ export class ScenarioSummaryBar extends HTMLElement {
   }
 
   connectedCallback() {
+    console.log('[ScenarioSummaryBar] connectedCallback called');
     this.co2Card = this.shadowRoot.getElementById('co2');
     this.tempCard = this.shadowRoot.getElementById('temp');
     this.slrCard = this.shadowRoot.getElementById('slr');
 
+    console.log('[ScenarioSummaryBar] Subscribing to store updates');
     this._unsubscribeStore = store.subscribeTo(
       (state) => ({
         year: state.selectedYear,
@@ -69,34 +72,37 @@ export class ScenarioSummaryBar extends HTMLElement {
           : null
       }),
       ({ year, primary, comparison, mode }) => {
+        console.log('[ScenarioSummaryBar] Store update received', { year, primary, comparison, mode });
         this._updateSummary(primary, comparison, year, mode);
       }
     );
   }
 
   disconnectedCallback() {
-    // Wenn die Komponente entfernt wird, Listener abmelden
+    console.log('[ScenarioSummaryBar] disconnectedCallback called');
     if (this._unsubscribeStore) {
+      console.log('[ScenarioSummaryBar] Unsubscribing from store updates');
       this._unsubscribeStore();
       this._unsubscribeStore = null;
     }
   }
-  
+
   _setLabels(mode, comparisonIsSet = false) {
+    console.log('[ScenarioSummaryBar] Setting labels', { mode, comparisonIsSet });
     const isDelta = mode === 'delta' && comparisonIsSet;
-  
+
     this.co2Card.setLabel(
       isDelta
         ? 'CO₂-Unterschied zw. Haupt- und Vergleichsszenario'
         : 'Zusätzliches CO₂ ggü. 2025'
     );
-  
+
     this.tempCard.setLabel(
       isDelta
         ? 'Temperatur-Unterschied (in °C)'
         : 'Temperatur ggü. ø1850–1900'
     );
-  
+
     this.slrCard.setLabel(
       isDelta
         ? 'Meeresspiegel-Unterschied (in mm)'
@@ -105,62 +111,89 @@ export class ScenarioSummaryBar extends HTMLElement {
   }
 
   _updateSummary(primary, comparison, year, mode) {
+    console.log('[ScenarioSummaryBar] Updating summary', { primary, comparison, year, mode });
     this._setLabels(mode, !!comparison);
     const format = (val, unit = '', digits = 10) => {
       if (val === null || val === undefined || Number.isNaN(val)) return '–';
       return `${val.toFixed(digits)}${unit}`;
     };
 
-    if (!primary?.computed?.data) return;
+    if (!primary?.computed?.data) {
+      console.warn('[ScenarioSummaryBar] No primary data available for the selected year');
+      return;
+    }
     const primaryData = primary.computed.data.find(d => d.year === year);
-    if (!primaryData) return;
+    if (!primaryData) {
+      console.warn('[ScenarioSummaryBar] No primary data found for the year', year);
+      return;
+    }
 
-    let co2Val = primaryData.cumulativeCo2inThisYearDeltaKg;
+    console.log('[ScenarioSummaryBar] Initial primary data values', {
+      co2Val: primaryData.cumulativeCo2DeltaKg,
+      tempVal: primaryData.temperatureC,
+      slrVal: primaryData.seaLevelMm,
+    });
+
+    let co2Val = primaryData.cumulativeCo2DeltaKg;
     let tempVal = primaryData.temperatureC;
     let slrVal = primaryData.seaLevelMm;
 
-    // Labels und Tooltips abhängig vom Modus
     if (mode === 'delta' && comparison?.computed?.data) {
-      const comparisonData = comparison.computed.data.find(d => d.year === year);
-      if (!comparisonData) return;
+      console.log('[ScenarioSummaryBar] Delta mode detected. Attempting to fetch comparison data for year', year);
 
-      // Werte berechnen
-      co2Val = Math.abs(primaryData.cumulativeCo2inThisYearDeltaKg - comparisonData.cumulativeCo2inThisYearDeltaKg);
+      const comparisonData = comparison.computed.data.find(d => d.year === year);
+      if (!comparisonData) {
+        console.warn('[ScenarioSummaryBar] No comparison data found for the year', year);
+        return;
+      }
+
+      console.log('[ScenarioSummaryBar] Comparison data found', {
+        co2Val: comparisonData.cumulativeCo2DeltaKg,
+        tempVal: comparisonData.temperatureC,
+        slrVal: comparisonData.seaLevelMm,
+      });
+
+      co2Val = Math.abs(primaryData.cumulativeCo2DeltaKg - comparisonData.cumulativeCo2DeltaKg);
       tempVal = Math.abs(primaryData.temperatureC - comparisonData.temperatureC);
       slrVal = Math.abs(primaryData.seaLevelMm - comparisonData.seaLevelMm);
 
-      // Labels setzen
-      this.co2Card.setAttribute('label', 'CO₂-Unterschied');
-      this.tempCard.setAttribute('label', 'Temperatur-Unterschied');
-      this.slrCard.setAttribute('label', 'Meeresspiegel-Unterschied');
+      console.log('[ScenarioSummaryBar] Calculated delta values', { co2Val, tempVal, slrVal });
 
-      // Tooltips setzen
       const pName = primary.name || 'Hauptszenario';
       const cName = comparison.name || 'Vergleichsszenario';
       const tooltip = `Zwischen "${pName}" und "${cName}"`;
+
+      console.log('[ScenarioSummaryBar] Setting delta mode tooltips and labels', { tooltip });
+      this.co2Card.setAttribute('label', 'CO₂-Unterschied');
+      this.tempCard.setAttribute('label', 'Temperatur-Unterschied');
+      this.slrCard.setAttribute('label', 'Meeresspiegel-Unterschied');
 
       this.co2Card.setAttribute('title', tooltip);
       this.tempCard.setAttribute('title', tooltip);
       this.slrCard.setAttribute('title', tooltip);
     } else {
-      // Absoluter Modus – Labels wie gehabt
+      console.log('[ScenarioSummaryBar] Absolute mode detected. Setting default labels');
       this.co2Card.setAttribute('label', 'Zusätzliches CO₂ ggü. 2025');
       this.tempCard.setAttribute('label', 'Temperatur ggü. ø1850-1900');
       this.slrCard.setAttribute('label', 'Meeresspiegel ggü. ø1995–2014');
 
-      // Tooltips leeren
+      console.log('[ScenarioSummaryBar] Removing tooltips for absolute mode');
       this.co2Card.removeAttribute('title');
       this.tempCard.removeAttribute('title');
       this.slrCard.removeAttribute('title');
     }
 
+    console.log('[ScenarioSummaryBar] Final values to be set on cards', { co2Val, tempVal, slrVal });
     this.co2Card.setValue(format(co2Val, ' kg'));
     this.tempCard.setValue(format(tempVal, '°C'));
     this.slrCard.setValue(format(slrVal, ' mm'));
+
   }
 
   getMode() {
-    return this.shadowRoot.getElementById('modeToggle').getMode();
+    const mode = this.shadowRoot.getElementById('modeToggle').getMode();
+    console.log('[ScenarioSummaryBar] getMode called, returning', mode);
+    return mode;
   }
 }
 

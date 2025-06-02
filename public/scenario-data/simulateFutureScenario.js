@@ -60,6 +60,7 @@ export function simulateFutureScenario(params) {
   const allYears = collectAllYears();
   // console.log("Years collected:", allYears);
 
+  const baseYear = 2025;
 
   // Initialize results array
   const results = [];
@@ -80,6 +81,24 @@ export function simulateFutureScenario(params) {
   }
 
 
+  /**
+   * Calculates the cumulative CO2 delta up to a specified year.
+   *
+   * This function computes the total change in CO2 emissions from the base year
+   * up to the given year, considering the annual CO2 delta and the timeframe
+   * over which the CO2 change is applied.
+   *
+   * @param {number} year - The year up to which the cumulative CO2 delta is calculated.
+   * @param {number} co2DeltaKg - The annual change in CO2 emissions in kilograms.
+   * @param {number} co2ApplicationTimeframe - The number of years over which the CO2 change is applied.
+   * @returns {number} - The cumulative CO2 delta in kilograms up to the specified year.
+   */
+  function cumulativeCo2DeltaUpToYear(year, co2DeltaKg, co2ApplicationTimeframe) {
+    if (year < baseYear) return 0;
+    const yearsEmitted = Math.min(year - baseYear + 1, co2ApplicationTimeframe);
+    return co2DeltaKg * yearsEmitted;
+  }
+
 /**
  * Calculates the cumulative effective CO2 delta for a given year.
  *
@@ -94,7 +113,6 @@ export function simulateFutureScenario(params) {
  */
   function cumulativeEffectiveCo2inThisYearDeltaKg(year, co2DeltaKg, co2ApplicationTimeframe, co2EffectYearSpread) {
     let totalEffect = 0;
-    const baseYear = 2025;
 
     for (let i = baseYear; i < baseYear + co2ApplicationTimeframe; i++) {
       if (year < i) continue; // Future emissions don't contribute
@@ -138,7 +156,7 @@ export function simulateFutureScenario(params) {
 
     results.push({
       year,
-      cumulativeCo2DeltaKg: cumulativeCo2Delta,
+      cumulativeCo2DeltaKg: cumulativeCo2DeltaUpToYear(year, co2DeltaKg, co2ApplicationTimeframe),
       cumulativeEffectiveCo2inThisYearDeltaKg: cumulativeEffectiveCo2Delta[index],
       temperatureC,
       temperatureDeltaC,

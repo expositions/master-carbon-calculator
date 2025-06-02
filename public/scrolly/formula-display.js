@@ -30,8 +30,7 @@ class FormulaVar extends HTMLElement {
         z-index: 1000;
         max-width: 300px;
         min-width: 150px;
-      }
-    `;
+      }`;
 
     wrapper.setAttribute('data-tooltip', tooltipText);
     wrapper.innerHTML = `<slot></slot>`;
