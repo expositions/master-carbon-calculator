@@ -132,6 +132,26 @@ export class ScenarioSelector extends HTMLElement {
         comparisonScenarioId: state.comparisonScenarioId
       }),
       ({ scenariosById, scenarioOrder, selectedScenarioId, comparisonScenarioId }) => {
+        // FALLBACK FOR INSPECTION LATER
+        // // Log changes to scenariosById
+        // const previousScenariosById = this._previousScenariosById || {};
+        // const changes = Object.keys(scenariosById).reduce((acc, key) => {
+        //   if (!previousScenariosById[key]) {
+        //     acc.added.push({ id: key, scenario: scenariosById[key] });
+        //   } else if (JSON.stringify(previousScenariosById[key]) !== JSON.stringify(scenariosById[key])) {
+        //     acc.updated.push({ id: key, scenario: scenariosById[key] });
+        //   }
+        //   return acc;
+        // }, { added: [], updated: [] });
+
+        // const removed = Object.keys(previousScenariosById).filter(key => !scenariosById[key]);
+
+        // if (changes.added.length > 0 || changes.updated.length > 0 || removed.length > 0) {
+        //   console.log('scenariosById changes:', { added: changes.added, updated: changes.updated, removed });
+        // }
+
+        // this._previousScenariosById = { ...scenariosById };
+
         this._renderFromStore(scenariosById, scenarioOrder, selectedScenarioId, comparisonScenarioId);
       }
     );

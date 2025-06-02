@@ -20,19 +20,27 @@ async function fetchFileContents(fileName) {
   }
 }
 
-const fileContents = await fetchFileContents('../dashboard/store-documentation.md');
-
 ////////////////////////////////////////////////////////////////////////////////
 // Helper: store schema as string for LLM context
 ////////////////////////////////////////////////////////////////////////////////
-const STORE_DOC = `
-# Klima-Simulationssystem: Datenmodell
 
-Beachte exakt die Struktur und die Bezeichnungen der Felder in diesem Dokument:
-"""
-${fileContents}
-"""
-`.trim();
+let STORE_DOC = null;
+
+async function main() {
+  const fileContents = await fetchFileContents('../dashboard/store-documentation.md');
+  STORE_DOC = `
+  # Klima-Simulationssystem: Datenmodell
+  Beachte exakt die Struktur und die Bezeichnungen der Felder in diesem Dokument:
+  """
+  ${fileContents}
+  """
+  `.trim();
+
+  // ... all other orchestration code, e.g., initOrchestrator() ...
+  requestAnimationFrame(initOrchestrator);
+}
+
+main();
 
 ////////////////////////////////////////////////////////////////////////////////
 // Helper: Find chat component
@@ -174,8 +182,6 @@ function initOrchestrator() {
   });
 }
 
-requestAnimationFrame(initOrchestrator);
-
 ////////////////////////////////////////////////////////////////////////////////
 // LLM Calls: agentic system and expert export
 ////////////////////////////////////////////////////////////////////////////////
@@ -191,10 +197,10 @@ function makeLLMInput(convo, mode = 'agentic') {
   // System prompt scaffolds for both agent and expert mode
   if (mode === 'expert') {
     return [
-      "SYSTEM: Du bist ein Klimasimulations-Experte. Erstelle anhand der Konversation und des Profils ein vollständiges Szenariokonfigurations-Objekt nach folgender Dokumentation. Gib das JSON exakt nach Schema zurück (fehlende optionale Felder dürfen fehlen). Du verwendest zum Schreiben des JSONs die Informationen aus der eingefügten Konversation.",
+      "SYSTEM: Du bist ein Klimasimulations-Experte. Erstelle anhand der Konversation und des Profils ein vollständiges JSON-Objekt nach folgender Dokumentation. Gib das JSON exakt nach Schema zurück (fehlende optionale Felder dürfen fehlen). Du verwendest zum Schreiben des JSONs die Informationen aus der eingefügten Konversation.",
+      "Das JSON-Objekt muss die Struktur 'ExpertOutput' haben. Im Szenario bzw. in den Szenarien definierst du genau die Verhaltensänderungen, die welche Länder in diesem Fall wie lange bei welchen IPCC-Annahmen wie häufig anwenden. Im Profil definierst du, welches Szenario du anzeigen willst und ob du es im Vergleich zu einem anderen Szenario anzeigen willst. Vergleiche machst du besonders dann, wenn der User nach einem Vergleich fragt oder simulieren will, was es ausmacht, wenn man Y statt X macht.",
+      "Beispiel: 30km Radfahren statt Auto, täglich. Dann kannst du entweder ein Szenario mit ZWEI Aktivitäten konfigurieren, nämlich einmal zusätzlich Rad fahren (DO_MORE), einmal DO_LESS Auto fahren. Oder du konfigurierst zwei Szenarien, eins mit DO_MORE Radfahren und eins mit DO_LESS Auto fahren, setzt dein Profil auf 'delta' und setzt comparisonScenarioId und selectedScenarioId auf die beiden Szenarien.",
       "",
-
-
       "# Defaults: ",
       "Für alle Aspekte, die nicht direkt als sinnvoll aus der Anfrage hervorgehen oder nötig zu wissen sind, nimmst du erstmal defaults an. Diese Defaults lauten: ",
       "- co2ApplicationTimeframe: 20 (Mittelwert für Anwendungszeitraum in Jahren)",
@@ -204,16 +210,16 @@ function makeLLMInput(convo, mode = 'agentic') {
       "- slrScenario: 'median' (Mittelwert für Meeresspiegelanstieg)",
       "- scaleLabel: 'Welt' (Standard für Zielpopulation)",
       "- scaleType: 'PRESET' (Standard für Skalierungstyp)",
-      "- selectedCountries: [WORLD] (Standardmäßig keine spezifischen Länder ausgewählt, da bereits mit WORLD alle Länder ausgewählt sind)",
+      "- selectedCountries: [WORLD] (Standardmäßig keine spezifischen Länder ausgewählt, da bereits mit WORLD alle Länder ausgewählt sind). Verwendet Ländercodes.",
       "- behaviors: [] (Standardmäßig keine Verhaltensänderungen definiert, da diese genuin durch den Nutzer eingegeben werden sollen)",
       "- selectedYear: 2100 (Dieses Jahr ist intuitiv gut nachvollziehbar, da es noch in unserem Zeithorizont ist)",
       "- displayMode: 'absolute' (Standardanzeigemodus für Simulationsergebnisse, da er nur ein Szenario zeigt statt zwei)",
       "- scenarioOrder: [] (Keine spezifische Szenarienreihenfolge definiert, da dies nur für die GUI wichtig ist)",
-      "- dirtyScenarioIds: [] (Hier sollten alle Szenarien-IDs eingetragen werden, die neu berechnet werden müssen)",
+      "- dirtyScenarioIds: [] (Hier sollten alle deine Szenarien-IDs eingetragen werden)",
       "- comparisonScenarioId: null (Kein Vergleichsszenario standardmäßig ausgewählt, aber nötig wenn displayMode 'delta' ist)",
       "",
       "# Antwortformat: ",
-      "Deine Antwort MUSS ein einziges JSON-Objekt nach folgendem Typ sein. Gib KEINEN Freitext, KEINE Erklärungen, KEINE Kommentare, KEINE Codeblöcke zurück, KEINE triple backticks.",
+      "Deine Antwort MUSS ein einziges JSON-Objekt nach folgendem Typ 'ExpertOutput' sein. Gib KEINEN Freitext, KEINE Erklärungen, KEINE Kommentare, KEINE Codeblöcke zurück, KEINE triple backticks.",
       "Gib ausschließlich ein valides JSON aus.",
       "Alle Felder, die mit ? gekennzeichnet sind, sind optional.",
       "Alle anderen Felder müssen ausgefüllt werden.",
@@ -222,7 +228,7 @@ function makeLLMInput(convo, mode = 'agentic') {
         name: string;
         description: string;
 
-        co2DeltaKg: number;
+        co2DeltaKg: number; // in kg CO₂ pro Kopf pro Jahr, üblicherweise das Produkt aus co2Amount pro Einheit und frequency
         co2ApplicationTimeframe: number;
         co2EffectYearSpread: number;
 
@@ -232,7 +238,7 @@ function makeLLMInput(convo, mode = 'agentic') {
 
         scaleLabel: 'Nur ich' | 'Deutschland' | 'Europäische Union' | 'Welt' | 'G7' | 'G20' | 'Weit entwickelt' | 'Wenig entwickelt' | 'Meistes CO₂ pro Kopf' | 'Eigene Auswahl';
         scaleType: 'PRESET' | 'CUSTOM';
-        selectedCountries: string[];
+        selectedCountries: string[]; // Ländercodes
 
         behaviors: Behavior[];
       };
@@ -240,18 +246,17 @@ function makeLLMInput(convo, mode = 'agentic') {
       type Behavior = {
         id: string;
         label: string;
-        co2Amount: number;
+        co2Amount: number; //in KG CO₂ pro Einheit, schätze anhand wissenschaftlicher Angaben!
         unit: string;
         frequency: number;
         timeUnit: 'Tag' | 'Woche' | 'Monat' | 'Jahr' | '10 Jahre';
         onceOnly: boolean;
         mode: 'DO_MORE' | 'DO_LESS';
-        co2DeltaKg: number;
+        co2DeltaKg: number; // in kg CO₂ pro Kopf pro Jahr, üblicherweise das Produkt aus co2Amount pro Einheit und frequency. Also z.B. bei 100g GHG pro Tag und 365 Tagen im Jahr: 0.1kg * 365 = 36.5kg CO₂ pro Kopf pro Jahr. Oder bei 1 Tonne pro Woche: 1000kg * 52 Wochen = 52000kg CO₂ pro Kopf pro Jahr. Schreibe das Ergebnis hier rein!
         isActive: boolean;
         source: 'llm' | 'user' | string;
         unsicherheitsbereichKg?: string;
         annahmen?: string;
-        quellenStichworte?: string[];
         meta?: {
           name: string;
           amount_info: Array<{ text: string; amount: number; unit: string }>;
@@ -262,6 +267,12 @@ function makeLLMInput(convo, mode = 'agentic') {
 
       type ExpertOutput = {
         scenarios: ScenarioObject[]; // Mindestens ein, maximal zwei Szenarien
+        profile: {
+          displayMode: "absolute" | "delta";
+          selectedScenarioId: string;
+          comparisonScenarioId: string;
+          selectedYear: number;
+        };
       };
 
       **Optional-felder (mit ? gekennzeichnet) dürfen fehlen, wenn nicht bekannt. Alle anderen Felder müssen ausgefüllt werden.**
@@ -274,7 +285,7 @@ function makeLLMInput(convo, mode = 'agentic') {
             "id": "ssp1-1.9-path",
             "name": "Der 1,5 Grad Weg",
             "description": "Ambitionierter Klimaschutz...",
-            "co2DeltaKg": 0,
+            "co2DeltaKg": 0, //hier die CO₂-Änderung in kg pro Kopf
             "co2ApplicationTimeframe": 20,
             "co2EffectYearSpread": 5,
             "tempScenario": "SSP1_1_9",
@@ -282,10 +293,16 @@ function makeLLMInput(convo, mode = 'agentic') {
             "slrScenario": "median",
             "scaleLabel": "Welt",
             "scaleType": "PRESET",
-            "selectedCountries": [],
+            "selectedCountries": [], // Ländercodes
             "behaviors": []
           }
-        ]
+        ],
+        "profile": {
+          "displayMode": "absolute", // Standardmäßig "absolute", da er nur ein Szenario zeigt statt zwei. Wenn Vergleich gefragt ist, auf "delta" setzen und comparisonScenarioId setzen.
+          "selectedScenarioId": "...",
+          "comparisonScenarioId": "...",
+          "selectedYear": 2100 // Standardmäßig 2100, da es noch in unserem Zeithorizont ist, gerne anpassen, falls entsprechende Anzeichen in Convo
+        }
       }`,
 
 
@@ -311,13 +328,14 @@ function makeLLMInput(convo, mode = 'agentic') {
   } else {
     return [
       "# Rolle: Du bist ein freundlicher, hilfsbereiter Chatbot.",
-      "# Aufgabe: Deine Aufgabe ist es, Informationen von einem Nutzer abzufragen. ",
+      "# Aufgabe: Deine Aufgabe ist es, Informationen von einem Nutzer abzufragen.",
       "Folgende Informationen solltest du abfragen: ",
       "- Welche Verhaltensänderung oder Wandel/Wechsel soll simuliert werden",
-      "- Für wie lange ",
+      "- Für wie lange wird angenommen, dass Menschen ihr Verhalten ändern?",
       "- Von wie vielen Menschen oder welchen Ländern",
       "- Welches Basisszenario",
       "- (und so weiter) ",
+      "Du achtest darauf, nichts doppelt abzufragen, was schon gesagt wurde. Du schließt hingegen aus dem bisherigen Verlauf, was der Nutzer sinnvollerweise sonst als Standard gern wählen könnte.",
       "Für alle Aspekte, die nicht direkt als sinnvoll aus der Anfrage hervorgehen oder nötig zu wissen sind, nimmst du erstmal defaults an. Diese Defaults lauten: ",
       "- co2ApplicationTimeframe: 20 (Mittelwert für Anwendungszeitraum in Jahren)",
       "- co2EffectYearSpread: 5 (Mittelwert für Verteilung der Wirkung in Jahren)",
@@ -326,7 +344,7 @@ function makeLLMInput(convo, mode = 'agentic') {
       "- slrScenario: 'median' (Mittelwert für Meeresspiegelanstieg)",
       "- scaleLabel: 'Welt' (Standard für Zielpopulation)",
       "- scaleType: 'PRESET' (Standard für Skalierungstyp)",
-      "- selectedCountries: [WORLD] (Standardmäßig keine spezifischen Länder ausgewählt, da bereits mit WORLD alle Länder ausgewählt sind)",
+      "- selectedCountries: [WORLD] (Standardmäßig keine spezifischen Länder ausgewählt, da bereits mit WORLD alle Länder ausgewählt sind). Verwendet Ländercodes.",
       "- behaviors: [] (Standardmäßig keine Verhaltensänderungen definiert, da diese genuin durch den Nutzer eingegeben werden sollen)",
       "- selectedYear: 2100 (Dieses Jahr ist intuitiv gut nachvollziehbar, da es noch in unserem Zeithorizont ist)",
       "- displayMode: 'absolute' (Standardanzeigemodus für Simulationsergebnisse, da er nur ein Szenario zeigt statt zwei)",
@@ -343,6 +361,8 @@ function makeLLMInput(convo, mode = 'agentic') {
       "- suggestions: Array von Strings, die Antwortoptionen für den User. Sollte in der Regel gegeben werden.",
       "- profile: Objekt, das Änderungen zum aktuellen Profil des Users enthält. Sollte gegeben werden, sofern die Änderung in der UI sofort schon sichtbar sein soll. Ist in der Regel auf UI-Steuerung wie das Jahr, das ausgewählte Szenario, etc. relevant. Hier wird nur der PATCH gegeben",
       "- scenarioPatch: Objekt, das Änderungen zum aktuellen Szenario des Users enthält. Sollte gegeben werden, sofern die Änderung in der UI sofort schon sichtbar sein soll.",
+      "-readyForExpertEvaluation: Boolean, ob die Antwort bereit ist, an den Experten weitergegeben zu werden. Auf true stellen, wenn du alle wichtigen Informationen erhalten hast, die für die Konfiguration eines Szenarios benötigt werden.",
+      "Wichtig: Alle Felder, die im Schema als number deklariert sind, dürfen ausschließlich numerische Werte enthalten. KEINE Rechnungen, KEINE Strings, KEINE Platzhalter. Wenn du etwas berechnen musst, rechne es intern und gib nur das Ergebnis als Zahl zurück.",
       "So sieht ein-Objekt aus: ",
       `type OrchestratorOutput = {
         message: string;                     // Die Antwort/Nachricht an den Nutzer (Pflichtfeld)
@@ -358,12 +378,14 @@ function makeLLMInput(convo, mode = 'agentic') {
           target: "main" | "comparison";     // Welches Szenario soll gepatcht werden?
           patch: Partial<ScenarioObject>;    // Felder und Werte für das Patchen.
         };
+        readyForExpertEvaluation?: boolean; // Optional: Ob die Antwort bereit ist, an den Experten weitergegeben zu werden.
       }`,
       "",
       "Deine Nachrichten an den User schreibst du als String in den Key 'message'. ",
       "Du versuchst zudem, wenn du Aspekte erfahren möchtest, im Key 'suggestions' sehr gut passende Antwortoptionen zu geben. Zum Beispiel zur Frage, wie lange die Verhaltensänderung simuliert werden soll, könntest du anbieten '1 Jahr', '10 Jahre', '75 Jahre' (das bezeichnet auch die Ober- und Untergrenze). ",
       "",
-      "Konzentriere dich jeweils auf den nächsten wichtigen Schritt, der zugleich intuitiv am nächsten liegt.",
+      "Konzentriere dich bei der Frage, welchen Aspekt du abfragen solltest, jeweils auf den nächsten wichtigen Schritt, der zugleich intuitiv am nächsten liegt.",
+      "Grundsätzlich sollten drei Hauptaspekte abgefragt werden: Wie viele Menschen (d.h. welche Länder/Ländergruppen) machen wie häufig und wie lang was, bzw. was an Stelle von was?",
       "",
       "Wenn der User etwa fragt: 'Viele Leute essen Falafel statt Döner', dann frage erstmal direkt: Wie viele Leute? Und biete die Optionen 'Deutschland', 'Europa' oder 'die ganze Welt'. ",
       "Dann fragst du nach der Fleischsorte und bietest in Suggestion an: 'Huhn', 'Kalb'.",
@@ -406,12 +428,17 @@ async function callAgenticLLM(convo) {
   const raw = await res.json();
   let respObj;
   try {
-    const text = raw.output?.[0]?.content?.[0]?.text;
+    let text = raw.output?.[0]?.content?.[0]?.text?.trim();
+    if (text.startsWith('```')) {
+      text = text.replace(/^```(json)?/i, '').replace(/```$/, '').trim();
+    }
     respObj = JSON.parse(text);
   } catch (e) {
+    console.error('LLM-Output:', text);
     await replacePlaceholder('❌ Die Antwort konnte nicht gelesen werden.');
     throw e;
   }
+  
   return respObj;
 }
 
@@ -424,8 +451,22 @@ async function callExpertLLM(convo) {
     body: JSON.stringify({ userInput: input })
   });
   if (!res.ok) throw new Error('LLM HTTP ' + res.status);
-  return res.json(); // expect { scenarios: [ ... ] }
+
+  // Die Response ist NICHT das gewünschte JSON, sondern enthält erst in .output[0].content[0].text den eigentlichen JSON-String!
+  const raw = await res.json();
+  let respObj;
+  try {
+    // Defensive: Stelle sicher, dass die Struktur wie erwartet ist
+    const text = raw.output?.[0]?.content?.[0]?.text;
+    if (!text) throw new Error("LLM response has no text output");
+    respObj = JSON.parse(text);
+  } catch (e) {
+    await replacePlaceholder('❌ Die Antwort konnte nicht gelesen werden.');
+    throw e;
+  }
+  return respObj;
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Applying LLM replies
@@ -467,16 +508,35 @@ async function applyAgenticLLMResponse(resp) {
     if (targetId) {
       store.patchScenario(targetId, resp.scenarioPatch.patch);
     }
+  };
+
+  // Expertenauswertung triggern, falls Bot-Output bereit ist
+  if (resp.readyForExpertEvaluation === true) {
+    // Optional: Bot-Nachricht an User, dass es losgeht (kann aber auch schon im LLM-message-Text stehen)
+    await replacePlaceholder('Alle Infos sind da, Szenario wird jetzt erstellt...');
+    // Jetzt Expert-Flow triggern
+    const chat = getChat();
+    const convo = getHelper().chats[chat._id];
+    try {
+      const expertResp = await callExpertLLM(convo);
+      await applyExpertLLMResponse(expertResp);
+    } catch (err) {
+      await replacePlaceholder('❌ Fehler bei der Szenariokonfiguration.');
+    }
   }
 }
 
 async function applyExpertLLMResponse(resp) {
-  // We expect: { scenarios: [ ...full ScenarioObject(s)... ] }
-  if (!resp.scenarios || !Array.isArray(resp.scenarios)) {
+  // console.log('[Expert] Eingehende Antwort:', resp);
+
+  // Check scenarios array
+  if (!resp.scenarios || !Array.isArray(resp.scenarios) || !resp.scenarios.length) {
+    console.error('[Expert] Keine Szenarien im Response:', resp);
     await replacePlaceholder('❌ Antwort ist nicht valide. Bitte noch einmal.');
     return;
   }
-  // Update scenariosById, scenarioOrder, selectedScenarioId, etc.
+
+  // Apply scenarios (write to store)
   const state = store.getState();
   const updates = { ...state.scenariosById };
   let firstId = null;
@@ -485,14 +545,46 @@ async function applyExpertLLMResponse(resp) {
     if (!firstId) firstId = scn.id;
     store.markScenarioAsDirty(scn.id);
   });
+
+  // Prepare scenario order
+  const scenarioOrder = [];
+
+  // Apply (potential) profile-patch
+  if (resp.profile) {
+    // Patch/merge profile in chat + conversation
+    const chat = getChat();
+    const convo = getHelper().chats[chat._id];
+    const oldProfile = { ...convo.profile };
+    const patchedProfile = { ...oldProfile, ...resp.profile };
+
+    chat.setProfile(patchedProfile);
+    convo.profile = patchedProfile;
+    persistChats(getHelper().chats, chat._id);
+
+    // Nur die Felder aus resp.profile ins globale store übernehmen:
+    const p = resp.profile;
+    const patch = {};
+    if ('displayMode' in p) patch.displayMode = p.displayMode;
+    if ('selectedYear' in p) patch.selectedYear = p.selectedYear;
+    if ('selectedScenarioId' in p) patch.selectedScenarioId = p.selectedScenarioId;
+    if ('comparisonScenarioId' in p) patch.comparisonScenarioId = p.comparisonScenarioId;
+    if (Object.keys(patch).length) {
+      // console.log('[Expert] Patch für store.setState:', patch);
+      store.setState(patch);
+    }
+  }
+
+  // Setzen von Szenarien, Order, aktive IDs. Wenn profile nichts setzt, wird einfach wie vorher verfahren.
   store.setState({
     scenariosById: updates,
-    scenarioOrder: resp.scenarios.map(scn => scn.id),
-    selectedScenarioId: firstId,
-    comparisonScenarioId: resp.scenarios[1]?.id || null
+    scenarioOrder: scenarioOrder,
+    selectedScenarioId: resp.profile?.selectedScenarioId || scenarioOrder[0],
+    comparisonScenarioId: resp.profile?.comparisonScenarioId || (resp.scenarios[1]?.id ?? null)
   });
+
   await replacePlaceholder('✅ Simulation eingerichtet! Ergebnisse werden berechnet.');
 }
+
 
 async function replacePlaceholder(text, chips = []) {
   const chat = getChat();

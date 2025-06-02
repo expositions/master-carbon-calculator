@@ -366,41 +366,6 @@
 
   <section id="simulator"></section>
     <climate-dashboard style="max-width: 100vw; max-height: 100vh;"></climate-dashboard>
-    <script type="module">
-      import '../dashboard/ClimateDashboard.js';
-      import store from '../dashboard/store.js';
-      import { scenarios } from '../scenario-data/defaultScenarios.js';
-      document.addEventListener('DOMContentLoaded', () => {
-        const scenariosById = Object.fromEntries(
-          scenarios.map(s => [s.id, s])
-        );
-  
-        store.setState({
-          selectedYear: 2025,
-          selectedScenarioId: 'paris-accord',
-          scenariosById,
-          scenarioEditor: {
-            isOpen: false,
-            targetScenarioId: null,
-            draft: {}
-          },
-          activitiesEditor: {
-            isOpen: false,
-            targetScenarioId: null,
-            targetBehaviorId: null,
-            draft: {}
-          },
-          activityCatalog: [] // Kann später geladen werden
-        });
-  
-        // Dirty-Check für alle Szenarien
-        for (const scenario of scenarios) {
-          if (!scenario.computed || !scenario.computed.data?.length) {
-            store.markScenarioAsDirty(scenario.id);
-          }
-        }
-      });
-    </script>
   </section>
 
   <div class="section single-column" id="">
@@ -570,9 +535,13 @@
     </div>
   </div>
 
-
-
-  <script>
+</div>
+<!-- Footer -->
+<!-- <footer class="footer dark">
+  <p>Dein Klimasimulator – 2025</p>
+</footer> -->
+</body>
+<script>
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.kapitale').forEach(p => {
       const firstChar = p.innerText.charAt(0);
@@ -580,14 +549,44 @@
       p.innerHTML = `<span class="regular-text-initial">${firstChar}</span>${rest}`;
     });
   });
-  </script>
+</script>
 
-</div>
-<!-- Footer -->
-<!-- <footer class="footer dark">
-  <p>Dein Klimasimulator – 2025</p>
-</footer> -->
-</body>
+<script type="module">
+  import '../dashboard/ClimateDashboard.js';
+  import store from '../dashboard/store.js';
+  import { scenarios } from '../scenario-data/defaultScenarios.js';
+  document.addEventListener('DOMContentLoaded', () => {
+    console.warn('DOMContentLoaded');
+    const scenariosById = Object.fromEntries(
+      scenarios.map(s => [s.id, s])
+    );
+
+    store.setState({
+      selectedYear: 2025,
+      selectedScenarioId: 'ssp2-4.5-path',
+      scenariosById,
+      scenarioEditor: {
+        isOpen: false,
+        targetScenarioId: null,
+        draft: {}
+      },
+      activitiesEditor: {
+        isOpen: false,
+        targetScenarioId: null,
+        targetBehaviorId: null,
+        draft: {}
+      },
+      activityCatalog: [] // Kann später geladen werden
+    });
+
+    // Dirty-Check für alle Szenarien
+    for (const scenario of scenarios) {
+      if (!scenario.computed || !scenario.computed.data?.length) {
+        store.markScenarioAsDirty(scenario.id);
+      }
+    }
+  });
+</script>
 </html>
 
     <!-- Narrative Karte mit Text-Overlay -->

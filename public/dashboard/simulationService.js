@@ -123,4 +123,14 @@ export function startSimulationLoop() {
       }
     }
   );
+  // Periodic check for dirty scenarios as FALLBACK
+  setInterval(() => {
+    const dirtyIds = store.getState().dirtyScenarioIds;
+    if (dirtyIds.length > 0) {
+      console.log("Periodic check found dirty scenarios, running simulations for:", dirtyIds);
+      for (const id of dirtyIds) {
+        runScenarioSimulation(id);
+      }
+    }
+  }, 1500);
 }

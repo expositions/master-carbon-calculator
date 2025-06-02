@@ -355,11 +355,17 @@ export class LLMChat extends HTMLElement {
     chipsWrap.innerHTML = this._options
       .map(t => `<div class="chip">${this._escape(t)}</div>`)
       .join('');
-    [...chipsWrap.children].forEach(chip => {
-      chip.addEventListener('click', () => {
-        this.sendUser(chip.textContent);
+      [...chipsWrap.children].forEach(chip => {
+        chip.addEventListener('click', () => {
+          const text = chip.textContent;
+          this.sendUser(text);
+          // Der eigentliche Trigger für den Orchestrator:
+          this.dispatchEvent(new CustomEvent('user-message', { detail: { text } }));
+          // (Optional: Input-Feld leeren)
+          // this.$('#input').value = '';
+          this._autogrow();
+        });
       });
-    });
 
     // Drawer (conversation list) is left empty; orchestrator populates it via external code.
   }

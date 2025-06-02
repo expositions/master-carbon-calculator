@@ -166,7 +166,7 @@ export class ScenarioSummaryBar extends HTMLElement {
 
   getMode() {
     const mode = this.shadowRoot.getElementById('modeToggle').getMode();
-    console.log('[ScenarioSummaryBar] getMode called, returning', mode);
+    // console.log('[ScenarioSummaryBar] getMode called, returning', mode);
     return mode;
   }
 }
