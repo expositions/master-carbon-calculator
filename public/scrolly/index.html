@@ -556,7 +556,6 @@
   import store from '../dashboard/store.js';
   import { scenarios } from '../scenario-data/defaultScenarios.js';
   document.addEventListener('DOMContentLoaded', () => {
-    console.warn('DOMContentLoaded');
     const scenariosById = Object.fromEntries(
       scenarios.map(s => [s.id, s])
     );

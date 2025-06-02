@@ -149,6 +149,8 @@ export class LLMChat extends HTMLElement {
     return /*html*/`
 <style>
 :host {
+  background: white;
+  color: black;
   display: flex;
   flex-direction: column;
   max-width: 60%;
@@ -159,6 +161,10 @@ export class LLMChat extends HTMLElement {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: wrap;
+  font-family: Merriweather, Arial, Helvetica;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
 }
 
 /* Toolbar */
@@ -168,7 +174,6 @@ export class LLMChat extends HTMLElement {
   gap: 8px;
   padding: 6px 10px;
   border-bottom: 1px solid #ddd;
-  background: #fafafa;
   z-index: 1;
 }
 #burger,
@@ -197,23 +202,25 @@ export class LLMChat extends HTMLElement {
   padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  background: #fff;
+  gap: 6px;
 }
 .msg {
-  max-width: 70%;
-  padding: 6px 10px;
-  border-radius: 7px;
-  font-size: 0.95em;
-  line-height: 1.35;
+  max-width: 72%;
+  padding: 10px 10px;
+  font-size: 0.9em;
+  line-height: 1.5;
   word-wrap: break-word;
 }
 .msg.bot {
-  background: #f1f3f7;
+  border-bottom: 1px solid #266592ff;
+  border-right: 1px solid #266592ff;
+  border-radius: 0 0 6px 0;
   align-self: flex-start;
 }
 .msg.user {
-  background: #cce4ff;
+  border-bottom: 1px solid #28b200;
+  border-left: 1px solid #28b200;
+  border-radius: 0 0 0 6px;
   align-self: flex-end;
 }
 .msg a {
@@ -227,10 +234,12 @@ export class LLMChat extends HTMLElement {
   overflow-x: auto;
   gap: 6px;
   padding: 6px 10px;
-  background: #fafafa;
+  color: white;
+  height: 2.8em;
 }
 .chip {
-  background: #eee;
+  background: #005ad6;
+  color: white;
   border-radius: 18px;
   padding: 4px 12px;
   cursor: pointer;
@@ -239,7 +248,7 @@ export class LLMChat extends HTMLElement {
   user-select: none;
 }
 .chip:hover {
-  background: #ddd;
+  background:rgb(0, 66, 158);
 }
 
 /* Input */
@@ -249,20 +258,24 @@ export class LLMChat extends HTMLElement {
   border-top: 1px solid #ddd;
   padding: 6px 10px;
   gap: 8px;
-  background: #fafafa;
 }
 #input {
   flex: 1;
   resize: none;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  border: 0;
+  border-bottom: 2px solid #28b200;
   padding: 6px;
   font-family: inherit;
   font-size: 1em;
   line-height: 1.35;
   max-height: 6.5em;
   overflow-y: auto;
+  box-sizing: border-box;
 }
+#input:focus {
+  outline: none;
+}
+
 #sendBtn {
   border: none;
   background: none;
@@ -322,17 +335,17 @@ export class LLMChat extends HTMLElement {
 </style>
 
 <div id="bar">
-  <button id="burger" aria-label="Open Chats">☰</button>
+  <button id="burger" aria-label="Chats öffnen">☰</button>
   <span id="title" contenteditable="true"></span>
-  <button id="plus" aria-label="New Chat">＋</button>
+  <button id="plus" aria-label="Neuer Chat">＋</button>
 </div>
 
 <div id="log"></div>
 <div id="chipsWrap"></div>
 
 <div id="inputBar">
-  <textarea id="input" rows="1" placeholder="Type a message…"></textarea>
-  <button id="sendBtn" aria-label="Send">▶️</button>
+  <textarea id="input" rows="1" placeholder="Schreibe hier"></textarea>
+  <button id="sendBtn" aria-label="Senden">▶</button>
 </div>
 
 <!-- Floating Overlay -->
