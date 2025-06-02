@@ -404,7 +404,17 @@ body {
   position: fixed;
   left: 10%;
   top: 10%;
-  transform: translateY(-50%);
+  animation: blur-in 0.5s ease-in-out forwards;
+  @keyframes blur-in {
+    0% {
+      filter: blur(10px);
+      opacity: 0;
+    }
+    100% {
+      filter: blur(0);
+      opacity: 1;
+    }
+  }
   text-align: left;
   max-width: 40%;
 }
@@ -417,7 +427,17 @@ body {
   position: fixed;
   right: 10%;
   top: 10%;
-  transform: translateY(-50%);
+  animation: blur-in 0.5s ease-in-out forwards;
+  @keyframes blur-in {
+    0% {
+      filter: blur(10px);
+      opacity: 0;
+    }
+    100% {
+      filter: blur(0);
+      opacity: 1;
+    }
+  }
   text-align: right;
   max-width: 40%;
 }
