@@ -6,7 +6,7 @@ template.innerHTML = `
       background: #fff;
       border: 1px solid #ddd;
       border-radius: 8px;
-      padding: 12px;
+      padding: 8px;
       text-align: center;
       font-family: 'Aboreto', serif;
       box-shadow: 0 2px 5px rgba(0,0,0,0.04);

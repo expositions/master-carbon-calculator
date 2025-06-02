@@ -9,7 +9,7 @@ template.innerHTML = `
       display: flex;
       border-radius: 12px;
       font-family: 'Aboreto', serif;
-      height: 100px;
+      height: 75px;
       box-sizing: border-box;
     }
 
@@ -24,6 +24,13 @@ template.innerHTML = `
       margin: 5px;
       box-sizing: border-box;
       flex: 1 1 33%;
+    }
+    mini-value-card#co2 {
+      margin-left: 0;
+    }
+
+    mini-value-card#slr {
+      margin-right: 0;
     }
 
   </style>

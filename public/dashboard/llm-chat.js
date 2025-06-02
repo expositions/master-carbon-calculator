@@ -153,9 +153,9 @@ export class LLMChat extends HTMLElement {
   color: black;
   display: flex;
   flex-direction: column;
-  max-width: 60%;
   width: 70%;
   height: 100%;
+  margin-top: 5px;
   font-family: system-ui;
   position: relative;
   overflow: hidden;

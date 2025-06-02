@@ -14,7 +14,7 @@ const template = document.createElement('template');
 template.innerHTML = `
   <style>
     :host {
-      display: block;
+      display: flex;
       width: 100%;
       max-width: 100vw;
       height: auto;
@@ -25,18 +25,34 @@ template.innerHTML = `
       display: flex;
       flex-direction: column;
       height: 90vh;
-      transform: translateX(1vw);
-      width: 98vw;
-      overflow: hidden;
+      width: 100vw;
+      padding: 1vw;
+      overflow: visible;
       box-sizing: border-box;
       padding: 10px;
       gap: 10px;
       position: relative; /* Needed for handle centering! */
     }
 
-    scenario-summary-bar,
+    .visualisation-wrapper {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0; /* allow it to shrink if needed */
+    }
+
+    sea-level-visualization-dashboard {
+      flex: 1 1 0;
+      min-height: 0;
+      display: flex;
+      align-items: stretch;
+    }
+
     year-slider {
-      flex: 0 0 60px;
+      display: flex;
+      justify-content: center;
+      align-self: stretch;
+      width: 100%;
     }
 
     .main-panel {
@@ -44,7 +60,6 @@ template.innerHTML = `
       display: flex;
       min-height: 0;
       gap: 10px;
-      overflow: hidden;
     }
 
     .chatbot-placeholder {
@@ -59,30 +74,6 @@ template.innerHTML = `
       font-size: 1.1em;
       color: #888;
       flex-shrink: 0;
-    }
-
-    .visualization-wrapper {
-      flex: 1 1 auto;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      min-width: 0;
-      min-height: 0;
-      max-height: 90vh;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .visualization-aspect-ratio {
-      aspect-ratio: 3 / 2;
-      width: 100%;
-      max-height: 100%;
-      height: auto;
-    }
-
-    sea-level-visualization-dashboard {
-      width: 100%;
-      height: 100%;
     }
 
     /* Drawer overlay styles */
@@ -164,12 +155,10 @@ template.innerHTML = `
     </div>
     <div class="main-panel">
       <llm-chat id="chat"></llm-chat>
-      <div class="visualization-wrapper">
-        <div class="visualization-aspect-ratio">
-          <scenario-summary-bar id="summaryBar"></scenario-summary-bar>
-          <sea-level-visualization-dashboard hide-text></sea-level-visualization-dashboard>
-          <year-slider></year-slider>
-        </div>
+      <div class="visualisation-wrapper">
+        <scenario-summary-bar id="summaryBar"></scenario-summary-bar>
+        <sea-level-visualization-dashboard hide-text></sea-level-visualization-dashboard>
+        <year-slider></year-slider>
       </div>
     </div>
     <scenario-editor></scenario-editor>

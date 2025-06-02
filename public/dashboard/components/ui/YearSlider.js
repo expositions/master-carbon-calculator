@@ -4,13 +4,14 @@ const template = document.createElement('template');
 template.innerHTML = `
   <style>
     :host {
-      display: block;
+      display: flex;
+      width: 100%;
       font-family: 'Aboreto', serif;
     }
 
     .slider-container {
-      transform: translateX(5%);
-      width: 90%;
+      flex: 1 1 80%;
+      max-width: 80%;
       padding: 10px;
       text-align: center;
     }
@@ -32,7 +33,7 @@ template.innerHTML = `
       display: flex;
       justify-content: space-between;
       font-size: 0.7rem;
-      color: #777;
+      color: white;
       padding: 0 6px;
     }
 
