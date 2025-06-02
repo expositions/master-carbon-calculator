@@ -29,26 +29,34 @@ template.innerHTML = `
       box-sizing: border-box;
       padding: 10px;
       gap: 10px;
+      position: relative; /* Needed for handle centering! */
     }
 
     scenario-summary-bar,
     year-slider {
-      flex: 0 0 60px; /* oder deine echte Höhe */
+      flex: 0 0 60px;
     }
 
     .main-panel {
       flex: 1 1 auto;
       display: flex;
-      min-height: 0; /* nötig, damit es nicht überläuft */
+      min-height: 0;
       gap: 10px;
       overflow: hidden;
     }
 
-    scenario-selector {
-      // flex: 1 1 300px;
+    .chatbot-placeholder {
       min-width: 300px;
+      max-width: 400px;
       height: 100%;
-      overflow: auto;
+      background: #f6f6f6;
+      border: 1px dashed #bbb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1em;
+      color: #888;
+      flex-shrink: 0;
     }
 
     .visualization-wrapper {
@@ -63,9 +71,8 @@ template.innerHTML = `
       position: relative;
     }
 
-    /* Container mit fixem Seitenverhältnis */
     .visualization-aspect-ratio {
-      aspect-ratio: 3 / 2; /* dein gewünschtes Verhältnis */
+      aspect-ratio: 3 / 2;
       width: 100%;
       max-height: 100%;
       height: auto;
@@ -76,47 +83,85 @@ template.innerHTML = `
       height: 100%;
     }
 
-    year-slider {
-      flex: 0 0 60px;
+    /* Drawer overlay styles */
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.07);
+      z-index: 1001;
+      transition: opacity 0.2s;
+      opacity: 1;
+      pointer-events: all;
     }
-
-    .resize-handle {
-      width: 3px;
-      cursor: col-resize;
-      background-color: rgb(135, 216, 115);
-      flex-shrink: 0;
-      position: relative;
-      border-radius: 10px; /* Rundung an den Ecken */
+    .drawer-backdrop.hidden {
+      opacity: 0;
+      pointer-events: none;
     }
-
-    .resize-handle::before,
-    .resize-handle::after {
-      content: '';
+    .drawer {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 320px;
+      background: #fff;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+      z-index: 1002;
+      transform: translateX(-100%);
+      transition: transform 0.33s cubic-bezier(.77,0,.18,1);
+      display: flex;
+      flex-direction: column;
+      will-change: transform;
+      touch-action: none;
+    }
+    .drawer.open {
+      transform: translateX(0);
+    }
+    /* Handle INSIDE dashboard, vertically centered RELATIVE TO dashboard */
+    .drawer-handle {
       position: absolute;
-      width: 2px;
-      height: 45px;
-      background-color:rgb(135, 216, 115);
-      cursor: col-resize;
       top: 50%;
+      left: 0;
       transform: translateY(-50%);
-      border-radius: 5px; /* Rundung an den Ecken */
-
+      z-index: 1010; /* Must be above dashboard, below overlay drawer */
+      width: 28px;
+      height: 62px;
+      background: rgb(135, 216, 115);
+      border-radius: 0 11px 11px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.13);
+      transition: background 0.2s;
+      opacity: 0.85;
+      border: none;
+      outline: none;
+      font-size: 1.7em;
+      color: #333;
+      user-select: none;
     }
-
-    .resize-handle::before {
-      left: -4px;
+    .drawer-handle:active,
+    .drawer-handle:focus {
+      background: rgb(95, 186, 85);
+      opacity: 1;
     }
-
-    .resize-handle::after {
-      right: -4px;
+    .drawer-handle:focus-visible {
+      box-shadow: 0 0 0 2px #81c784;
     }
   </style>
+  <!-- Overlay Drawer (not inside dashboard-container) -->
+  <div class="drawer" id="scenarioDrawer" tabindex="-1">
+    <scenario-selector></scenario-selector>
+  </div>
+  <div class="drawer-backdrop hidden" id="drawerBackdrop"></div>
 
   <div class="dashboard-container">
+    <div class="drawer-handle" id="drawerHandle" title="Szenarien anzeigen" tabindex="0" aria-label="Szenarien anzeigen">
+      &#9776;
+    </div>
     <scenario-summary-bar id="summaryBar"></scenario-summary-bar>
     <div class="main-panel">
-      <scenario-selector></scenario-selector>
-      <div class="resize-handle"></div>
+      <div class="chatbot-placeholder">[chatbot coming soon]</div>
       <div class="visualization-wrapper">
         <div class="visualization-aspect-ratio">
           <sea-level-visualization-dashboard hide-text></sea-level-visualization-dashboard>
@@ -124,67 +169,103 @@ template.innerHTML = `
       </div>
     </div>
     <year-slider></year-slider>
-      <scenario-editor></scenario-editor>
+    <scenario-editor></scenario-editor>
     <activity-catalog></activity-catalog>
     <activity-editor></activity-editor>
     <country-editor></country-editor>
   </div>
 `;
 
-  export class ClimateDashboard extends HTMLElement {
-    constructor() {
-      super();
-      this.attachShadow({ mode: 'open' }).appendChild(template.content.cloneNode(true));
-
-      /**
-       * Wir speichern die letzten Simulationsinputs, um doppelte Rechenläufe zu vermeiden.
-       * `_lastSimInput` betrifft das Hauptszenario (selectedScenarioId)
-       * `_lastComparisonSimInput` betrifft das Vergleichsszenario (comparisonScenarioId)
-       */
-      this._lastSimInput = null;
-      this._lastComparisonSimInput = null;
-    }
-
-    connectedCallback() {
-
-      // Startet Beobachter, der „veraltete“ (also dirty) Szenarien im Store
-      // findet, ggf. neu berechnet und in den Store speichert
-      startSimulationLoop();
-
-      ///////////////////////////////////////////////////////////////////////////
-      // UI: RESIZE-HANDLING ZWISCHEN SZENARIENLISTE UND VISUALISIERUNG
-      ///////////////////////////////////////////////////////////////////////////
-
-      const shadowRoot = this.shadowRoot;
-      const selector = shadowRoot.querySelector('scenario-selector');
-      const handle = shadowRoot.querySelector('.resize-handle');
-
-      let isResizing = false;
-
-      handle.addEventListener('mousedown', () => {
-        isResizing = true;
-        document.body.style.cursor = 'col-resize';
-        document.body.style.userSelect = 'none';
-      });
-
-      globalThis.addEventListener('mousemove', (e) => {
-        if (!isResizing) return;
-
-        const offsetLeft = e.clientX;
-        const minWidth = 200;
-        const maxWidth = 1800;
-        const newWidth = Math.min(maxWidth, Math.max(minWidth, offsetLeft));
-        selector.style.flex = `0 0 ${newWidth}px`;
-      });
-
-      globalThis.addEventListener('mouseup', () => {
-        if (isResizing) {
-          isResizing = false;
-          document.body.style.cursor = '';
-          document.body.style.userSelect = '';
-        }
-      });
-    }
+export class ClimateDashboard extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' }).appendChild(template.content.cloneNode(true));
+    this._lastSimInput = null;
+    this._lastComparisonSimInput = null;
+    // No handler bindings here; see connectedCallback!
   }
 
-  customElements.define('climate-dashboard', ClimateDashboard);
+  connectedCallback() {
+    startSimulationLoop();
+
+    const shadowRoot = this.shadowRoot;
+    const drawer = shadowRoot.getElementById('scenarioDrawer');
+    const handle = shadowRoot.getElementById('drawerHandle');
+    const backdrop = shadowRoot.getElementById('drawerBackdrop');
+
+    this._drawerOpen = false;
+
+    // Arrow functions ensure correct this-binding
+    this._onDrawerHandleClick = (e) => {
+      e.stopPropagation();
+      if (this._drawerOpen) {
+        this._closeDrawer();
+      } else {
+        this._openDrawer();
+      }
+    };
+    this._onBackdropClick = () => this._closeDrawer();
+    this._onEsc = (e) => {
+      if (e.key === 'Escape' && this._drawerOpen) {
+        this._closeDrawer();
+      }
+    };
+
+    handle.addEventListener('click', this._onDrawerHandleClick);
+    handle.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this._onDrawerHandleClick(e);
+      }
+    });
+
+    backdrop.addEventListener('click', this._onBackdropClick);
+
+    window.addEventListener('keydown', this._onEsc);
+
+    this._toggleBodyScroll = (disable) => {
+      if (disable) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    };
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener('keydown', this._onEsc);
+  }
+
+  _openDrawer() {
+    const shadowRoot = this.shadowRoot;
+    const drawer = shadowRoot.getElementById('scenarioDrawer');
+    const backdrop = shadowRoot.getElementById('drawerBackdrop');
+
+    drawer.classList.add('open');
+    backdrop.classList.remove('hidden');
+    this._drawerOpen = true;
+    this._toggleBodyScroll(true);
+
+    // Focus drawer for ESC support
+    setTimeout(() => {
+      drawer.focus();
+    }, 40);
+  }
+
+  _closeDrawer() {
+    const shadowRoot = this.shadowRoot;
+    const drawer = shadowRoot.getElementById('scenarioDrawer');
+    const backdrop = shadowRoot.getElementById('drawerBackdrop');
+
+    drawer.classList.remove('open');
+    backdrop.classList.add('hidden');
+    this._drawerOpen = false;
+    this._toggleBodyScroll(false);
+
+    // Return focus to handle for accessibility
+    const handle = shadowRoot.getElementById('drawerHandle');
+    handle.focus();
+  }
+}
+
+customElements.define('climate-dashboard', ClimateDashboard);
