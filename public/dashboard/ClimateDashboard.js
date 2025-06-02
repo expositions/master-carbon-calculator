@@ -6,6 +6,7 @@ import './components/editors/scenario-editor/ScenarioEditor.js';
 import './components/editors/activity-editor/ActivityCatalog.js';
 import './components/editors/activity-editor/ActivityEditor.js';
 import './components/editors/country-editor/CountryEditor.js';
+import './orchestrator.js';
 
 import { startSimulationLoop } from './simulationService.js';
 
@@ -112,6 +113,7 @@ template.innerHTML = `
       flex-direction: column;
       will-change: transform;
       touch-action: none;
+      overflow-y: auto; /* Ensures the insides remain scrollable */
     }
     .drawer.open {
       transform: translateX(0);
@@ -161,8 +163,7 @@ template.innerHTML = `
     </div>
     <scenario-summary-bar id="summaryBar"></scenario-summary-bar>
     <div class="main-panel">
-      <div class="chatbot-placeholder">[chatbot coming soon]</div>
-      <div class="visualization-wrapper">
+        <llm-chat id="chat"></llm-chat>      <div class="visualization-wrapper">
         <div class="visualization-aspect-ratio">
           <sea-level-visualization-dashboard hide-text></sea-level-visualization-dashboard>
         </div>
@@ -221,7 +222,7 @@ export class ClimateDashboard extends HTMLElement {
 
     backdrop.addEventListener('click', this._onBackdropClick);
 
-    window.addEventListener('keydown', this._onEsc);
+    globalThis.addEventListener('keydown', this._onEsc);
 
     this._toggleBodyScroll = (disable) => {
       if (disable) {
@@ -233,7 +234,7 @@ export class ClimateDashboard extends HTMLElement {
   }
 
   disconnectedCallback() {
-    window.removeEventListener('keydown', this._onEsc);
+    globalThis.removeEventListener('keydown', this._onEsc);
   }
 
   _openDrawer() {

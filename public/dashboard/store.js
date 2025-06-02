@@ -259,6 +259,31 @@ const store = {
     this.setState({
       dirtyScenarioIds: this.state.dirtyScenarioIds.filter(x => x !== id)
     });
+  },
+
+  /**
+   * Aktualisiert einzelne Felder eines Szenarios und markiert es als dirty.
+   * @param {string} id      – ID des Szenarios, das gepatcht werden soll
+   * @param {Object} patch   – Teilobjekt mit Feldern, die überschrieben werden
+   */
+  patchScenario(id, patch) {
+    const scenario = this.state.scenariosById[id];
+    if (!scenario) return;  // Existiert nicht → nichts tun
+
+    // 1) Klonen und Felder überschreiben
+    const updated = { ...scenario, ...patch };
+
+    // 2) State neu zusammenbauen (alle Szenarien plus das geänderte)
+    const newScenarios = {
+      ...this.state.scenariosById,
+      [id]: updated
+    };
+
+    // 3) State patchen und neu speichern
+    this.setState({ scenariosById: newScenarios });
+
+    // 4) Szenario als “dirty” markieren (Neuberechnung erforderlich)
+    this.markScenarioAsDirty(id);
   }
 };
 

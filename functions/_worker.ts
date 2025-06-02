@@ -1,5 +1,6 @@
 // functions/_worker.ts
-import { onRequestPost } from "./api/llm.ts";
+import { onRequestPost as onRequestLLM } from "./api/llm.ts";
+import { onRequestPost as onRequestLLMRaw } from "./api/llm-raw.ts";
 
 export default {
   async fetch(request: Request, env: any, ctx: ExecutionContext) {
@@ -8,16 +9,20 @@ export default {
     // Redirect / to /scrolly/
     if (url.pathname === "/") {
       const destinationURL = `${url.origin}/scrolly/`;
-      const statusCode = 301;
-      return Response.redirect(destinationURL, statusCode);
+      return Response.redirect(destinationURL, 301);
     }
 
-    // 1) Nur POST /api/llm an LLM-Handler
+    // 1) POST /api/llm → templated LLM handler
     if (url.pathname === "/api/llm" && request.method === "POST") {
-      return onRequestPost({ request, env });
+      return onRequestLLM({ request, env });
     }
 
-    // 2) Sonst statische Dateien aus public/
+    // 2) POST /api/llm-raw → raw passthrough LLM handler
+    if (url.pathname === "/api/llm-raw" && request.method === "POST") {
+      return onRequestLLMRaw({ request, env });
+    }
+
+    // 3) All else → static assets
     return env.ASSETS.fetch(request);
   },
 };
