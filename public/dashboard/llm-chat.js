@@ -248,6 +248,11 @@ export class LLMChat extends HTMLElement {
   color: white;
   height: 2.8em;
   min-height: 2.5em;
+  -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer and Edge */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+#chipsWrap::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
 }
 .chip {
   background: #005ad6;
