@@ -19,13 +19,15 @@ template.innerHTML = `
       max-width: 100vw;
       height: auto;
       font-family: 'Aboreto', serif;
-    }
+      overflow: visible;
+      justify-content: center;
+      }
 
     .dashboard-container {
       display: flex;
       flex-direction: column;
       height: 90vh;
-      width: 100vw;
+      width: 96vw;
       padding: 1vw;
       overflow: visible;
       box-sizing: border-box;
@@ -37,8 +39,8 @@ template.innerHTML = `
     .visualisation-wrapper {
       display: flex;
       flex-direction: column;
-      height: 100%;
-      min-height: 0; /* allow it to shrink if needed */
+      height: auto;
+      min-height: 0;
     }
 
     sea-level-visualization-dashboard {
@@ -62,18 +64,56 @@ template.innerHTML = `
       gap: 10px;
     }
 
-    .chatbot-placeholder {
-      min-width: 300px;
-      max-width: 400px;
-      height: 100%;
-      background: #f6f6f6;
-      border: 1px dashed #bbb;
+    @media (max-width: 999px) {
+    :host {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1em;
-      color: #888;
-      flex-shrink: 0;
+      width: 100%;
+      max-width: 100vw;
+      min-height: 180vh;
+      font-family: 'Aboreto', serif;
+    }
+    .dashboard-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 180vh;
+      overflow: visible;
+      box-sizing: border-box;
+      padding: 10px;
+      gap: 10px;
+    }
+
+    .main-panel {
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 130vh;
+      }
+
+      llm-chat {
+        min-width: 0 !important; /* Remove any min-width restrictions */
+        max-width: none !important;
+        width: 100%;
+        margin-bottom: 10px;
+        min-height: 50vh;
+      }
+      .visualisation-wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: calc(100vw * 2 / 3 + 60px);
+        flex: 1 1 100vh;
+      }
+      sea-level-visualization-dashboard {
+        flex: 1 1 100px;
+        align-items: start;
+        min-height: calc(100vw * 2 / 3 - 120px);
+      }
+
+      year-slider {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        align-items: end;
+      }
     }
 
     /* Drawer overlay styles */
@@ -116,6 +156,7 @@ template.innerHTML = `
       top: 50%;
       left: 0;
       transform: translateY(-50%);
+      transform: translateX(-2vw);
       z-index: 1010; /* Must be above dashboard, below overlay drawer */
       width: 28px;
       height: 62px;
