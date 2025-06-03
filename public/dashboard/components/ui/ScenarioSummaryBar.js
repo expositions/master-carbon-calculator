@@ -98,16 +98,60 @@ export class ScenarioSummaryBar extends HTMLElement {
 
     this.slrCard.setLabel(
       isDelta
-        ? 'Meeresspiegel-Unterschied (in mm)'
+        ? 'Meeresspiegel-Unterschied'
         : 'Meeresspiegel ggü. ø1995–2014'
     );
   }
 
   _updateSummary(primary, comparison, year, mode) {
     this._setLabels(mode, !!comparison);
-    const format = (val, unit = '', digits = 10) => {
+
+    const formatCO2 = (val) => {
       if (val === null || val === undefined || Number.isNaN(val)) return '–';
-      return `${val.toFixed(digits)}${unit}`;
+
+      if (val < 1) {
+        return `${(val * 1000).toFixed(1).replace('.', ',')} g`; // Convert kg to grams
+      } else if (val < 1000) {
+        return `${val.toFixed(2).replace('.', ',')} kg`; // Keep in kilograms
+      } else {
+        return `${(val / 1000).toFixed(2).replace('.', ',')} t`; // Convert to tons
+      }
+    };
+
+    const formatSLR = (val) => {
+      if (val === null || val === undefined || Number.isNaN(val)) return '–';
+
+      if (val < 1) {
+        const decimalPlaces = Math.min(12, val.toString().split('.')[1]?.length || 0);
+        return `${val.toFixed(decimalPlaces).replace('.', ',')} mm`;
+      } else if (val < 10) {
+        return `${val.toFixed(3).replace('.', ',')} mm`;
+      } else if (val < 100) {
+        return `${(val / 10).toFixed(3).replace('.', ',')} cm`;
+      } else if (val < 1000) {
+        return `${(val / 10).toFixed(3).replace('.', ',')} cm`;
+      } else if (val < 10000) {
+        return `${(val / 1000).toFixed(3).replace('.', ',')} m`;
+      } else {
+        return `${(val / 1000).toFixed(2).replace('.', ',')} m`;
+      }
+    };
+
+    const formatTemp = (val) => {
+      if (val === null || val === undefined || Number.isNaN(val)) return '–';
+
+      if (val < 0.1) {
+        const decimalPlaces = Math.min(12, val.toString().split('.')[1]?.length || 0);
+        return `${val.toFixed(decimalPlaces).replace('.', ',')} °C`;
+      } else if (val < 1) {
+        return `${val.toFixed(3).replace('.', ',')} °C`;
+      } else if (val < 10) {
+        return `${val.toFixed(2).replace('.', ',')} °C`;
+      } else if (val < 100) {
+        return `${val.toFixed(1).replace('.', ',')} °C`;
+      } else {
+        return `${val.toFixed(0).replace('.', ',')} °C`;
+      }
     };
 
     if (!primary?.computed?.data) {
@@ -125,17 +169,15 @@ export class ScenarioSummaryBar extends HTMLElement {
     let slrVal = primaryData.seaLevelMm;
 
     if (mode === 'delta' && comparison?.computed?.data) {
-
       const comparisonData = comparison.computed.data.find(d => d.year === year);
       if (!comparisonData) {
         console.warn('[ScenarioSummaryBar] No comparison data found for the year', year);
         return;
-      };
+      }
 
       co2Val = Math.abs(primaryData.cumulativeCo2DeltaKg - comparisonData.cumulativeCo2DeltaKg);
       tempVal = Math.abs(primaryData.temperatureC - comparisonData.temperatureC);
       slrVal = Math.abs(primaryData.seaLevelMm - comparisonData.seaLevelMm);
-
 
       const pName = primary.name || 'Hauptszenario';
       const cName = comparison.name || 'Vergleichsszenario';
@@ -158,15 +200,13 @@ export class ScenarioSummaryBar extends HTMLElement {
       this.slrCard.removeAttribute('title');
     }
 
-    this.co2Card.setValue(format(co2Val, ' kg'));
-    this.tempCard.setValue(format(tempVal, '°C'));
-    this.slrCard.setValue(format(slrVal, ' mm'));
-
+    this.co2Card.setValue(formatCO2(co2Val));
+    this.tempCard.setValue(formatTemp(tempVal));
+    this.slrCard.setValue(formatSLR(slrVal));
   }
 
   getMode() {
     const mode = this.shadowRoot.getElementById('modeToggle').getMode();
-    // console.log('[ScenarioSummaryBar] getMode called, returning', mode);
     return mode;
   }
 }
