@@ -127,6 +127,12 @@ globalThis.addEventListener('scroll', function() {
   const firstTriggerTop = firstTrigger.getBoundingClientRect().top;
   const thirdTriggerTop = thirdTrigger.getBoundingClientRect().top;
 
+  // Ensure vis1 is not visible if the firstTrigger is significantly above the viewport
+  if (firstTriggerTop > globalThis.innerHeight * 1.5 || thirdTriggerTop <= -globalThis.innerHeight * 0.5) {
+    vis1.classList.remove('sticky', 'active');
+    return;
+  }
+
   if (firstTriggerTop <= 0 && thirdTriggerTop > 0) {
     vis1.classList.add('sticky');
   } else {
