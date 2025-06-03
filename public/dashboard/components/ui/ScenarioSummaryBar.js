@@ -109,9 +109,10 @@ export class ScenarioSummaryBar extends HTMLElement {
     const formatCO2 = (val) => {
       if (val === null || val === undefined || Number.isNaN(val)) return '–';
 
-      if (val < 1) {
+      const absVal = Math.abs(val); // Handle large negative values
+      if (absVal < 1) {
         return `${(val * 1000).toFixed(1).replace('.', ',')} g`; // Convert kg to grams
-      } else if (val < 1000) {
+      } else if (absVal < 1000) {
         return `${val.toFixed(2).replace('.', ',')} kg`; // Keep in kilograms
       } else {
         return `${(val / 1000).toFixed(2).replace('.', ',')} t`; // Convert to tons
@@ -175,7 +176,7 @@ export class ScenarioSummaryBar extends HTMLElement {
         return;
       }
 
-      co2Val = Math.abs(primaryData.cumulativeCo2DeltaKg - comparisonData.cumulativeCo2DeltaKg);
+      co2Val = primaryData.cumulativeCo2DeltaKg - comparisonData.cumulativeCo2DeltaKg;
       tempVal = Math.abs(primaryData.temperatureC - comparisonData.temperatureC);
       slrVal = Math.abs(primaryData.seaLevelMm - comparisonData.seaLevelMm);
 
