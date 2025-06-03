@@ -28,25 +28,11 @@ template.innerHTML = `
       margin: 6px 0;
       accent-color: #28b200;
     }
-
-    .marker-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.7rem;
-      color: white;
-      padding: 0 6px;
-    }
-
-    .marker-row span {
-      min-width: 20px;
-      text-align: center;
-    }
   </style>
 
   <div class="slider-container">
     <div class="year-label" id="activeYear">—</div>
     <input type="range" id="slider" min="0" max="0" step="1">
-    <div class="marker-row" id="markerRow"></div>
   </div>
 `;
 
@@ -62,7 +48,6 @@ export class YearSlider extends HTMLElement {
   connectedCallback() {
     this.slider = this.shadowRoot.getElementById('slider');
     this.label = this.shadowRoot.getElementById('activeYear');
-    this.markerRow = this.shadowRoot.getElementById('markerRow');
 
     /**
      * USER-INTERAKTION: Slider verändert den aktuellen Index,
@@ -137,9 +122,6 @@ export class YearSlider extends HTMLElement {
         store.setState({ selectedYear: this.years[0] });
       }
     }
-
-    // 5) Marker neu rendern
-    this._renderMarkers();
   }
 
   /**
@@ -163,26 +145,6 @@ export class YearSlider extends HTMLElement {
    */
   getYear() {
     return this.years[this.currentIndex] ?? null;
-  }
-
-  /**
-   * Zeichnet Marker unterhalb des Sliders,
-   * damit nicht jedes einzelne Jahr gerendert wird.
-   */
-  _renderMarkers() {
-    const total = this.years.length;
-    this.markerRow.innerHTML = '';
-
-    // Maximalanzahl an Markern
-    const maxMarkers = 10;
-    const step = Math.ceil(total / maxMarkers);
-
-    for (let i = 0; i < total; i += step) {
-      const span = document.createElement('span');
-      span.textContent = this.years[i];
-      span.style.flex = `1 1 auto`;
-      this.markerRow.appendChild(span);
-    }
   }
 }
 
