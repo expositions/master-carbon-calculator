@@ -735,3 +735,69 @@ body {
 .article a {
   opacity: 0.7; /* Keeps the hover effect consistent for visited links */
 }
+
+
+
+@media (max-width: 1000px) {
+
+  .headline-title {
+    font-size: 3.5em; /* Adjusted size as per instructions */
+  }
+  /* Adjust font sizes for titles */
+  h2.bold-intertitle {
+    font-size: 1.5rem; /* Reduce size for better readability on small screens */
+  }
+ 
+
+  h2.regular-headline, h2.regular-teaser {
+    font-size: 1.4rem; /* Slightly smaller for smaller screens */
+  }
+
+  h2.regular-teaser {
+    font-size: 1rem; /* Slightly smaller for smaller screens */
+  }
+
+  p.regular-text, p.regular-text.kapitale {
+    font-size: 1rem; /* Adjust paragraph text for better legibility */
+    line-height: 1.5; /* Ensure proper spacing */
+  }
+
+  /* Adjust container widths */
+  .content-container {
+    max-width: 90%; /* Reduce width to fit smaller screens */
+    padding: 0 1em; /* Add padding for better spacing */
+  }
+
+  /* Adjust multimedia elements */
+  .multimedia-element img {
+    max-width: 100%; /* Ensure images scale properly */
+    max-height: 60vh; /* Prevent images from taking too much vertical space */
+  }
+
+  /* Adjust expandable infoboxes */
+  expandable-infobox {
+    padding: 1em; /* Add padding for better spacing */
+    font-size: 0.9rem; /* Reduce font size slightly */
+  }
+
+  /* Adjust buttons */
+  .bottom-close-button {
+    font-size: 1rem; /* Slightly smaller button text */
+    padding: 0.8em 1.5em; /* Adjust padding for smaller buttons */
+  }
+
+  /* Adjust media triggers */
+  .media-trigger h2 {
+    font-size: 1.3rem; /* Reduce size for media trigger titles */
+  }
+
+  /* Adjust font sizes for titles */
+  h2.very-bold-intertitle {
+    font-size: 2.5rem; /* Reduce size for better readability on small screens */
+  }
+
+  /* Adjust sea-level-visualization component */
+  sea-level-visualization {
+    max-height: 50vh; /* Limit height for better fit on small screens */
+  }
+}
