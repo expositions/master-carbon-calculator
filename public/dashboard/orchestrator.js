@@ -65,7 +65,7 @@ function loadConversations() {
   if (helper.chats && Object.keys(helper.chats).length) return helper;
   // Create blank if none exist
   const blankId = crypto.randomUUID();
-  const blank = { id: blankId, name: 'New Chat', messages: [], profile: {} };
+  const blank = { id: blankId, name: 'Neuer Sim-Chat', messages: [], profile: {} };
   const initial = { chats: { [blankId]: blank }, activeChatId: blankId };
   saveHelper(initial);
   return initial;
@@ -104,7 +104,7 @@ function initOrchestrator() {
   // 3. Toolbar actions: "+" (new), "☰" (drawer)
   chat.addEventListener('new-conversation-request', () => {
     const id = crypto.randomUUID();
-    conversations[id] = { id, name: 'New Chat', messages: [], profile: {} };
+    conversations[id] = { id, name: 'Neuer Chat', messages: [], profile: {} };
     persistChats(conversations, id);
     chat.loadConversation(conversations[id]);
   });
@@ -141,7 +141,7 @@ function initOrchestrator() {
         if (!nextId) {
           // No convos left → create new
           const newId = crypto.randomUUID();
-          const blank = { id: newId, name: 'New Chat', messages: [], profile: {} };
+          const blank = { id: newId, name: 'Neuer Chat', messages: [], profile: {} };
           conversations[newId] = blank;
           persistChats(conversations, newId);
           chat.loadConversation(blank);
@@ -183,7 +183,7 @@ function initOrchestrator() {
         const expertResp = await callExpertLLM(convo);
         await applyExpertLLMResponse(expertResp);
       } catch (err) {
-        await replacePlaceholder('❌ Fehler bei der Szenariokonfiguration: ', err);
+        await replacePlaceholder('❌ Fehler bei der Szenariokonfiguration: ', err, ["nochmal probieren"]);
       }
     } else {
       // Normal agentic flow
@@ -191,7 +191,7 @@ function initOrchestrator() {
         const resp = await callAgenticLLM(convo);
         await applyAgenticLLMResponse(resp);
       } catch (err) {
-        await replacePlaceholder('❌ Fehler beim Abrufen der Antwort: ', err);
+        await replacePlaceholder('❌ Fehler beim Abrufen der Antwort: ', err, ["nochmal probieren"]);
       }
     }
   });
@@ -450,7 +450,7 @@ async function callAgenticLLM(convo) {
     respObj = JSON.parse(text);
   } catch (e) {
     console.error('LLM-Output:', text);
-    await replacePlaceholder('❌ Die Antwort konnte nicht gelesen werden.');
+    await replacePlaceholder('❌ Die Antwort konnte nicht gelesen werden.', ["nochmal probieren"]);
     throw e;
   }
   
@@ -476,7 +476,7 @@ async function callExpertLLM(convo) {
     if (!text) throw new Error("LLM response has no text output");
     respObj = JSON.parse(text);
   } catch (e) {
-    await replacePlaceholder('❌ Die Antwort konnte nicht gelesen werden.');
+    await replacePlaceholder('❌ Die Antwort konnte nicht gelesen werden. ', ["nochmal probieren"]);
     throw e;
   }
   return respObj;
@@ -536,7 +536,7 @@ async function applyAgenticLLMResponse(resp) {
       const expertResp = await callExpertLLM(convo);
       await applyExpertLLMResponse(expertResp);
     } catch (err) {
-      await replacePlaceholder('❌ Fehler bei der Szenariokonfiguration: ', err);
+      await replacePlaceholder('❌ Fehler bei der Szenariokonfiguration: ', err, ["nochmal probieren"]);
     }
   }
 }
@@ -547,7 +547,7 @@ async function applyExpertLLMResponse(resp) {
   // Check scenarios array
   if (!resp.scenarios || !Array.isArray(resp.scenarios) || !resp.scenarios.length) {
     console.error('[Expert] Keine Szenarien im Response:', resp);
-    await replacePlaceholder('❌ Antwort ist nicht valide. Bitte noch einmal.');
+    await replacePlaceholder('❌ Antwort ist nicht valide. ', ["nochmal probieren"]);
     return;
   }
 
