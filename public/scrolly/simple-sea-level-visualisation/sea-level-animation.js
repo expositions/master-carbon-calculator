@@ -77,8 +77,13 @@ class SeaLevelAnimator {
     }
 
     /* update label ------------------------------------------------------- */
-    host.getElementById("slr-label").textContent =
-      `Jahr ${year}: ${entry.temperatureC.toFixed(6)} °C über ø1850-1900`;
+    
+    const label = host.getElementById("slr-label");
+    if (year > 2025 && year < 12025) {
+      label.classList.add("change-effect");
+      setTimeout(() => label.classList.remove("change-effect"), 300);
+    }
+    label.textContent = `Jahr ${year}: ${entry.temperatureC.toFixed(6)} °C über ø1850-1900`;
 
     /* --- global scale factor (m → viewBox-units) ----------------------- */
     const viewUnitsPerMeter =

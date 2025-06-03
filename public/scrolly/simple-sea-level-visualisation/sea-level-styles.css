@@ -1,29 +1,31 @@
 /* sea-level-styles.css */
+
+/* Host element basic layout */
 :host {
   display: block;
   width: 100%;
   height: auto;
 }
 
-/* Ensure the entire visualization is inside a flexible container */
+/* Visualization container */
 #slr-container {
   position: relative;
   width: 100%;
-  max-width: 1200px; /* Prevent excessive stretching on large screens */
+  max-width: 1200px;
   margin: 0 auto;
-  overflow: hidden;
+  overflow: visible;
 }
 
-/* Ensure the image container maintains aspect ratio */
+/* Image container with maintained aspect ratio */
 #slr-images-container {
   position: relative;
   width: 100%;
   height: 0;
-  padding-bottom: 66.67%; /* 1200x800 aspect ratio → (800 / 1200) * 100 */
+  padding-bottom: 66.67%; /* 1200x800 ratio */
   overflow: hidden;
 }
 
-/* Make sure images scale properly */
+/* Responsive images inside container */
 #slr-images-container img {
   position: absolute;
   top: 0;
@@ -32,33 +34,8 @@
   height: auto;
 }
 
-
+/* Layering for SVG/PNG assets */
 #slr-background { z-index: 1; }
-/* #slr-sea { z-index: 2; transition: transform 1s ease-out; } */
-#slr-gauge { z-index: 3; }
-#slr-gauge-water { z-index: 4; transition: transform 1s ease-out; }
-
-#slr-text-wrapper {
-  position: relative;
-  padding: 10px;
-  text-align: center;
-  background-color: var(--color-bg, rgba(255,255,255,0.8));
-  z-index: 10;
-}
-
-#slr-label {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #28b200;
-}
-
-#slr-caption {
-  margin-top: 1.3rem;
-  font-size: 1rem;
-  color: #9b9b9b;
-}
-
-
 #slr-sea {
   position: absolute;
   top: 0;
@@ -67,32 +44,17 @@
   height: 100%;
   z-index: 2;
   overflow: hidden;
-  pointer-events: none; /* Optional: allows click-through */
+  pointer-events: none; /* Allows click-through */
 }
-
-/* Make sure the injected SVG itself fills its container */
 #slr-sea svg {
   width: 100%;
   height: 100%;
   display: block;
 }
+#slr-gauge { z-index: 3; }
+#slr-gauge-water { z-index: 4; transition: transform 1s ease-out; }
 
-
-
-
-#slr-container {
-  position: relative;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  overflow: hidden;
-}
-
-#slr-svg-container {
-  width: 100%;
-  height: auto;
-}
-
+/* Text and caption styling */
 #slr-text-wrapper {
   position: relative;
   padding: 10px;
@@ -105,10 +67,24 @@
   font-size: 1.2rem;
   font-weight: bold;
   color: #28b200;
+  transition: transform 0.3s ease, opacity 0.3s ease, color 0.3s ease;
+}
+
+/* Highlight effect when content changes */
+#slr-label.change-effect {
+  transform: scale(1.2);
+  opacity: 0.8;
+  color: #ff5722; /* Optional: Change color during the effect */
 }
 
 #slr-caption {
   margin-top: 1.3rem;
   font-size: 1rem;
   color: #9b9b9b;
+}
+
+/* SVG container for compatibility */
+#slr-svg-container {
+  width: 100%;
+  height: auto;
 }
