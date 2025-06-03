@@ -603,8 +603,11 @@ async function applyExpertLLMResponse(resp) {
 
 async function replacePlaceholder(text, chips = []) {
   const chat = getChat();
-  const msgs = chat.shadowRoot.querySelectorAll('.msg.bot');
-  const last = msgs[msgs.length - 1];
-  if (last && last.textContent.includes('Nachdenken')) last.remove();
-  await chat.sendBot(text, chips);
+  chat.removeLastBotMessageIf('Nachdenken');          // drop the spinner bubble
+  await chat.sendBot(text, chips);                    // show final answer
+  // also keep the orchestrator’s convo in sync:
+  const helper = getHelper();
+  const convo  = helper.chats[chat._id];
+  convo.messages.push({ role: 'bot', text });
+  persistChats(helper.chats, chat._id);
 }

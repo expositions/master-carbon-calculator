@@ -143,6 +143,17 @@ export class LLMChat extends HTMLElement {
     return this._afterRender();
   }
 
+  removeLastBotMessageIf(textFragment = 'Nachdenken') {
+    if (
+      this._messages.length &&
+      this._messages[this._messages.length - 1].role === 'bot' &&
+      this._messages[this._messages.length - 1].text.includes(textFragment)
+    ) {
+      this._messages.pop();
+      this._render();
+    }
+  }
+
   /* ---------- Private helpers ---------------------------------------- */
 
   _html() {
