@@ -72,8 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-// This code ensures that the sea level visualization remains sticky between the first and third triggers.
-// It also calculates the scroll percentage between these triggers to dynamically update the sea level visualization based on the year.
+// This  calculates the scroll percentage between these triggers to dynamically update the sea level visualization based on the year.
 document.addEventListener("DOMContentLoaded", function () {
   // Alle Multimedia-Elemente standardmäßig verbergen
   document.querySelectorAll('.multimedia-element').forEach(el => {
@@ -85,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   scroller.setup({
     step: '.media-trigger',   // Unsere Trigger-Elemente
-    offset: 0.2,              // 20 % vom oberen Viewport
+    offset: 0.5,              // 20 % vom oberen Viewport
     debug: false
   })
   .onStepEnter(function(response) {
