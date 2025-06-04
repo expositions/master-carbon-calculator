@@ -489,14 +489,13 @@ async function callExpertLLM(convo) {
 
 async function applyAgenticLLMResponse(resp) {
   await replacePlaceholder(resp.message, resp.suggestions || []);
-  // persist bot message
   const chat = getChat();
   const convo = getHelper().chats[chat._id];
   convo.messages.push({ role: 'bot', text: resp.message });
   persistChats(getHelper().chats, chat._id);
+
   // Overwrite profile if given
   if (resp.profile) {
-    // Merge/Patch das Profil!
     const oldProfile = { ...convo.profile };
     const patchedProfile = { ...oldProfile, ...resp.profile };
 
@@ -520,10 +519,40 @@ async function applyAgenticLLMResponse(resp) {
     const targetId = resp.scenarioPatch.target === 'comparison'
       ? ui.comparisonScenarioId
       : ui.selectedScenarioId;
+
     if (targetId) {
-      store.patchScenario(targetId, resp.scenarioPatch.patch);
+      // Check if the scenario has already been duplicated
+      const helper = getHelper();
+      const convo = helper.chats[chat._id];
+      if (!convo.isDuplicated) {
+        // Duplicate the scenario before applying the patch
+        const originalScenario = { ...store.getState().scenariosById[targetId] };
+        const newScenarioId = crypto.randomUUID();
+        const duplicatedScenario = { ...originalScenario, id: newScenarioId };
+
+        // Add the duplicated scenario to the store
+        const updatedScenarios = { ...store.getState().scenariosById, [newScenarioId]: duplicatedScenario };
+        store.setState({ scenariosById: updatedScenarios });
+
+        // Update the active scenario ID to the duplicated scenario
+        if (resp.scenarioPatch.target === 'comparison') {
+          store.setState({ comparisonScenarioId: newScenarioId });
+        } else {
+          store.setState({ selectedScenarioId: newScenarioId });
+        }
+
+        // Mark the scenario as duplicated
+        convo.isDuplicated = true;
+        persistChats(helper.chats, chat._id);
+
+        // Apply the patch to the duplicated scenario
+        store.patchScenario(newScenarioId, resp.scenarioPatch.patch);
+      } else {
+        // Apply the patch directly to the existing scenario
+        store.patchScenario(targetId, resp.scenarioPatch.patch);
+      }
     }
-  };
+  }
 
   // Expertenauswertung triggern, falls Bot-Output bereit ist
   if (resp.readyForExpertEvaluation === true) {
