@@ -570,6 +570,7 @@ export const ALL_AGGREGATES_NAMES = {
 
 // Export common aggregate groups
 export const ALL_AGGREGATES = {
+    "WORLD": WORLD,
     "Welt": WORLD,
     "Europa": EUROPE,
     "Asien": ASIA,

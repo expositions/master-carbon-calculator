@@ -203,11 +203,16 @@ function initOrchestrator() {
 
 function makeLLMInput(convo, mode = 'agentic') {
   const ui = store.getState();
+    // Dynamisch die Szenarien aus dem Store abrufen
+    const scenarios = Object.values(ui.scenariosById || {}).map(
+      (scenario) => `Name: ${scenario.name} Id: (${scenario.id}): Beschreibung: ${scenario.description}`
+    );
   const uiState = {
     displayMode: ui.displayMode,
     selectedYear: ui.selectedYear,
     selectedScenarioId: ui.selectedScenarioId,
-    comparisonScenarioId: ui.comparisonScenarioId
+    comparisonScenarioId: ui.comparisonScenarioId,
+    allScenarios: scenarios
   };
   // System prompt scaffolds for both agent and expert mode
   if (mode === 'expert') {
@@ -479,7 +484,7 @@ Die größte Rolle spielen diese Daten:
 - Du leitest den Nutzer angenehm und zielstrebig und transparent durch das Gespräch.
 - Du gibst alle Hilfestellungen, die hilfreich sind. Du gibst Kontext oder Erklärungen, wenn die Frage sonst schwer verständlich werde. Du ordnest ein, gibst Bedeutung. Du fragst immer, wie oder was der User am liebsten simulieren/durchspielen würde.
 - Der User könnte zwischendurch auch andere Fragen haben. Diese beantwortest du bitte auch!
-- Du versuschst immer, alltagsnah, intuitiv und verständlich zu sein. Du fragst immer nur einen Aspekt auf einmal ab.
+- Du versuschst immer, alltagsnah, intuitiv und verständlich zu sein. Du fragst immer nur einen Aspekt auf einmal ab. NIcht zu viel schreiben, das verwirrt sonst!
 - Du bist transparent über deine Annahmen, und welche Standardwerte du annimmst.
 - Du achtest darauf, nichts doppelt abzufragen, was schon gesagt wurde.
 - Du schließt aus dem bisherigen Verlauf, was der Nutzer sinnvollerweise sonst als Standard gern wählen könnte.
@@ -489,7 +494,7 @@ Die größte Rolle spielen diese Daten:
 - Du fragst nichts ab, was der Nutzer wahrscheinlich nicht weiß (etwa Emissionswerte von einzelnen Produkten)
 - Bei Szenarionamen verwendest du vor der technischen Bezeichnung immer die Alltagsbezeichnungen: 2-Grad-Weg (SSP1-2.6), "Der Mittelweg" (SSP2-4.5) "Der konfliktreiche Weg" (SSP3-7.0), "Der fossile Weg" (SSP5-8.5)
 - Wenn es um Vergleiche X zu Y geht, schreibe gerne z.B. auch die Pro-Kopf-Unterschiede für beide auf und vergleiche direkt in der Nachricht ("Das entspricht einer täglichen Einsparung von 100g CO₂, beim Autofahren wären es sogar 500g CO₂ pro Person – also gut fünf mal so viel.")
-- Sobald die Simulation geändert ist, lenke auch gern den Blick des Nutzers. Sage etwa: "Stell jetzt am besten am Jahresregler auf eine hohe Jahreszahl, um die langfristigen Auswirkungen gut zu sehen. In der Statusleiste über der Visualisierung siehst du ganz rechts, wie viel Unterschied das für den Meeresspiegel macht" oder so ähnlich, oder auch "Wenn du Details zur Einstellung sehen willst, öffne die Szenarienauswahl über den grünen Balken links!")
+- Sobald die Simulation geändert ist, lenke auch gern den Blick des Nutzers. Sage etwa: "Wenn du Details zur Einstellung sehen willst, öffne die Szenarienauswahl über den grünen Balken links!")
 - Ordne auch ein, wenn etwas unrealistisch ist. Etwa würde nicht jede Person in Deutschland pro Jahr 10 Macbooks kaufen. Erstelle solche unrealistischen Szenarien nur auf expliziten Wunsch, halte dich sonst an Common Sense.
 - Achte darauf, nicht zu viel mit den internen Begriffen zu handhaben, sondern ganz verständlich und anschaulich zu sprechen.
 - Verwende auch Absätze durch Newlines.
@@ -503,6 +508,7 @@ Zum Beispiel zur Frage, wie lange die Verhaltensänderung simuliert werden soll,
 - In der Regel solltest du das auch tun, und zwar mit Patches und Profiles, die den bisherigen Wissensstand über die Simulationswünsche ausdrücken, und für den Rest default-Werte setzen oder belassen.
 - Was du gerade umkonfiguriert hast, machst du in der Message auch noch sehr konzis klar. Transparenz ist wichtig. Ist der Nutzer wissbegierig, dann erkläre auch die aktuellen, in Bezug auf die aktuelle Abfrage relevanten Standardwerte. Also etwa: "Ich habe erstmal angenommen, dass Deutsche im Schnitt alle X Wochen einen Döner essen. Willst du das so simulieren oder einen anderen Wert?"
 - Beginne möglichst früh, ein Vergleichsszenario zu konfigurieren!
+- Manchmal passieren natürlich Fehler. Du kannst in """letzte Simulationsergebnisse für das Jahr 2099""" sehen, was die Simulation ausgerechnet hat für 2099. Wenn die Zahlen absurd sind oder nicht zu deiner letzten Intention passen, dann lege das bitte offen, entschuldige dich, und sage, hier stimmt etwas nicht, und geh danach genauer vor.
 
 ### Einsparungen
 Achte bei Einsparungen drauf, nicht "doppelt zu verneinen": Trägst du "DO_LESS" ein, dann würde ein negativer Wert bei den Emissionen bedeuten, dass am Ende eine positive CO2-Differenz entsteht. Also in der Regel trage einen positiven Wert ein sowie DO_LESS.
@@ -582,7 +588,7 @@ Beispiel-Scenarios:
   "profile": {
     "displayMode": "absolute", // Standardmäßig "absolute", da er nur ein Szenario zeigt statt zwei. Wenn Vergleich gefragt ist, auf "delta" setzen und comparisonScenarioId setzen.
     "selectedScenarioId": "...",
-    "comparisonScenarioId": "...",
+    "comparisonScenarioId": "...", // Die Standardszenarien haben die IDs "ssp1-1.9-path, ssp1-2.6-path, ssp2-4.5-path, ssp3-7.0-path, ssp5-8.5-path", und dann gibt es noch Szenarien, die du selbst hinzugefügt hast.
     "selectedYear": 2100 // Standardmäßig 2100, da es noch in unserem Zeithorizont ist, gerne anpassen, falls entsprechende Anzeichen in Convo
   }
 }
@@ -609,7 +615,7 @@ Wichtig: Alle Felder, die im Schema als number deklariert sind, dürfen ausschli
       "- selectedYear: 2100 (Dieses Jahr ist intuitiv gut nachvollziehbar, da es noch in unserem Zeithorizont ist)",
       "- displayMode: 'delta' (Standardanzeigemodus für Simulationsergebnisse, sofern zwei Szenarien verglichen werden)",
       "- dirtyScenarioIds: [] (Hier sollten alle Szenarien-IDs eingetragen werden, die neu berechnet werden müssen)",
-      "- comparisonScenarioId: null (nötig, wenn displayMode 'delta' ist)",
+      "- comparisonScenarioId: null (nötig, wenn displayMode 'delta' ist). ACHTUNG: TRAGE HIER NIE NUR COMPARISON EIN, sondern die tatsächliche ID.",
       "",
       "Denke dran: Falls du in profile oder scenarioPatch etwas änderst, musst du darauf achten, die an die Datentypen und Affordanzen des Datenmodells zu halten. Dies ist die Dokumentation dazu: ",
       STORE_DOC,
@@ -660,6 +666,11 @@ ALL_AGGREGATES_NAMES = {
       "--- UI-State, patchbar im Feld 'profile' ---",
       JSON.stringify(uiState, null, 2),
       "",
+      `
+      --- letzte Simulationsergebnisse für das Jahr 2099 --- 
+      ${JSON.stringify(store.getState().scenariosById[uiState.selectedScenarioId]?.computed?.data?.find(entry => entry.year === 2099) || {}, null, 2)}
+
+      `,
       "--- ANTWORTSCHEMA ---",
       `{
         "message": "...",
@@ -761,10 +772,32 @@ async function applyAgenticLLMResponse(resp) {
       ? ui.comparisonScenarioId
       : ui.selectedScenarioId;
 
+    // 🔁 EXPAND COUNTRY GROUP NAMES → ISO CODES
+    const patch = resp.scenarioPatch.patch;
+    if (Array.isArray(patch.selectedCountries)) {
+      const expandedCountries = patch.selectedCountries.flatMap(code => {
+        if (isAggregateGroupNameByName(code)) {
+          const resolved = getCountryGroup(code);
+          if (resolved?.length) {
+            console.log(`[CountryGroup] Expanded group "${code}" →`, resolved);
+            return resolved;
+          } else {
+            console.warn(`[CountryGroup] Group "${code}" has no entries.`);
+            return [];
+          }
+        } else {
+          return [code]; // Already a single country code
+        }
+      });
+
+      patch.selectedCountries = [...new Set(expandedCountries)]; // Deduplicate
+    }
+
     if (targetId) {
       // Check if the scenario has already been duplicated
       const helper = getHelper();
       const convo = helper.chats[chat._id];
+
       if (!convo.isDuplicated) {
         // Duplicate the scenario before applying the patch
         const originalScenario = { ...store.getState().scenariosById[targetId] };
@@ -786,11 +819,9 @@ async function applyAgenticLLMResponse(resp) {
         convo.isDuplicated = true;
         persistChats(helper.chats, chat._id);
 
-        // Apply the patch to the duplicated scenario
-        store.patchScenario(newScenarioId, resp.scenarioPatch.patch);
+        store.patchScenario(newScenarioId, patch);
       } else {
-        // Apply the patch directly to the existing scenario
-        store.patchScenario(targetId, resp.scenarioPatch.patch);
+        store.patchScenario(targetId, patch);
       }
     }
   }

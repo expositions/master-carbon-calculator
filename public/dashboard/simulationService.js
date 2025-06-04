@@ -125,7 +125,16 @@ export function startSimulationLoop() {
   );
   // Periodic check for dirty scenarios as FALLBACK
   setInterval(() => {
-    const dirtyIds = store.getState().dirtyScenarioIds;
+    const state = store.getState();
+    const dirtyIds = state.dirtyScenarioIds;
+
+    // Mark all scenarios without "computed" as dirty
+    for (const [id, scenario] of Object.entries(state.scenariosById)) {
+      if (!scenario?.computed?.data?.length) {
+        store.markScenarioAsDirty(id);
+      }
+    }
+
     if (dirtyIds.length > 0) {
       console.log("Periodic check found dirty scenarios, running simulations for:", dirtyIds);
       for (const id of dirtyIds) {
