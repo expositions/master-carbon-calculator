@@ -62,6 +62,15 @@ export class YearSlider extends HTMLElement {
       store.setState({ selectedYear: year });
     });
 
+    this._unsubscribeSelectedYear = store.subscribeTo(
+      (state) => state.selectedYear,
+      (selectedYear) => {
+        if (selectedYear !== undefined && selectedYear !== null) {
+          this.setYear(selectedYear);
+        }
+      }
+    );
+
     /**
      * Store-Änderungen beobachten:
      * Wenn selectedYear sich im globalen Zustand ändert,
